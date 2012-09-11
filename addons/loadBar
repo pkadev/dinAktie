@@ -1,0 +1,101 @@
+<?php # PHP loading bar (With Javascript). Made by Mike Rogem (Rogem Networks - http://www.rogem.net/). 
+/*
+####################################################################################################################################
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+If you do use this script, please give me credit :)
+#####################################################################################################################################
+This is just an example of how to make a loading bar using PHP and Javascript. You could use it when making an installer or something so the client has something nice to watch instead of having a small wait.
+This does require the client side to have javascript enabled. But if you want you could just send them bits of text and (wait for it) images if you want, it's really up to you.
+
+This is mainly just a proof of concept. 
+*/
+?>
+<?php 
+# Main Variables # You can edit these to see the results. 
+$rate_of_increase = 0.85;    // The rate at witch the loading bar will increase.
+$waiting_time = 50000; // How long being each bit of html is sent.
+?>
+<?php ob_start(); // Turn on output buffering?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Loading Bar</title>
+<style type="text/css">
+<!--
+#apDiv1 {
+    position:absolute;
+    width:500px;
+    height:20px;
+    z-index:1;
+    background-color: #FFFFFF;
+    left: 50px;
+    top: 50px;
+    border: thin solid #000000;
+    padding: 5px 5px 5px 5px;
+}
+#apDiv2 {
+float:left;
+    width:0%;
+    height:20px;
+    z-index:1;
+    background-color: #0000FF;
+    text-align:center;
+}
+#apDiv3 {
+position:absolute;
+    width:100%;
+    height:20px;
+    z-index:1;
+    text-align:center;
+    color:#003300;
+}
+-->
+</style>
+</head>
+
+<body>
+<div id="apDiv1">
+  <div id="apDiv2"></div>
+  <div id="apDiv3">Computing requirements...</div>
+</div>
+</body>
+</html>
+<script language="javascript">
+var loading = document.getElementById('apDiv2');
+var loading_text = document.getElementById('apDiv3');
+loading_text.innerHTML = 'Loading...';
+</script>
+<?php 
+ob_flush(); flush(); // Send the code so far so the loading bar comes up.
+$i = 0;
+$count_up_to = (100 / $rate_of_increase) - 1; // How high the while function will count up to
+while ($i <= $count_up_to) {
+   $i++;  
+   $percentage = ($i*$rate_of_increase);
+   $rounded = round($percentage); // Round the percentage to 0 significent figures.
+   ?>
+   <script language="javascript">
+loading.style.width = '<?php echo $percentage; ?>%'; // Change the width of the loading bar.
+<?php if($rounded != $rounded_last){ ?>
+loading_text.innerHTML = 'Loading <?php echo $rounded; ?>%'; // Change the text
+<?php }
+$rounded_last = $rounded;
+?>
+</script>
+   <?php
+    usleep($waiting_time); // Wait for a few seconds.
+    ob_flush(); flush();
+} 
+?>
+<script language="javascript">
+loading_text.innerHTML = 'Loaded!'; // Because it's loaded we can change the text to say loaded.
+</script>
+<?php
+ob_end_flush(); // Flush (send) the output buffer and turn off output buffering
+?> 
