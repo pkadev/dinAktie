@@ -92,14 +92,18 @@ a.darkLink:hover {text-decoration:underline;}
 a.darkLink:active {text-decoration:underline;}
 a.darklink:link { LINE-HEIGHT: 25px;}
 
-a.tablink:link {color:#FFFFFF;}      /* unvisited link */
-a.tablink:visited {color:#FFFFFF;}  /* visited link */
-a.tablink:hover {color:#FFFFFF;}  /* mouse over link */
-a.tablink:active {color:#555555;}  /* selected link */ 
+/* #E2491D Orange */
+/* #676D71 Gray */
+/* #9BDAE1 Cyan */
+
+a.tablink:link {color:#E2491D;}      /* unvisited link */
+a.tablink:visited {color: #E2491D;}  /* visited link */ /* Orange */
+a.tablink:hover {color:#E2491D;}  /* mouse over link */ /* Gray */
+a.tablink:active {color:#676D71;}  /* selected link */ 
 a.tablink:link {text-decoration:none;}
 a.tablink:visited {text-decoration:none;}
-a.tablink:hover {text-decoration:underline;}
-a.tablink:active {text-decoration:underline;}
+a.tablink:hover {text-decoration:none;}
+a.tablink:active {text-decoration:none;}
 
 a.popularScans:link {color:#ffffff;}      /* unvisited link */
 a.popularScans:visited {color:#ffffff;}  /* visited link */
@@ -130,18 +134,62 @@ h2 {
   font : bold 12pt Arial, Helvetica, geneva;
 }
 
-#header
+#footer_left
 {
-    position: absolute;
-    left : 20px;
-    right : 20px;
-    height : 161px;
-    margin-left : 0px;
-    margin-top : 00px;
-    color : #000000;
-    background-color : #0022CC;
-    background-image :url('sprites-horizontal.png');
-    background-size : auto 690;
+    position : absolute;
+    top :620px;
+    left : 15%;
+    width: 20%;
+    height : 140px;
+    padding-top : 20px;
+    padding-left :10px;
+    padding-bottom:10px;
+    color : #33;
+    font-family : "Titilum";
+    font-size : 0.9em;
+}
+#footer_center
+{
+    position : absolute;
+    top :620px;
+    left : 40%;
+    width: 20%;
+    height : 140px;
+    padding-top : 20px;
+    padding-left :10px;
+    padding-bottom:10px;
+    color : #33;
+    font-family : "Titilum";
+    font-size : 0.9em;
+}
+#footer_right
+{
+    position : absolute;
+    top :620px;
+    right : 15%;
+    width: 20%;
+    height : 140px;
+    padding-top : 20px;
+    padding-left :10px;
+    padding-bottom:10px;
+    color : #33;
+    font-family : "Titilum";
+    font-size : 0.9em;
+}
+
+.align-right { float:right; margin: 0 0 15px 15px; }
+.align-left { float:left; margin: 0 15px 15px 0; }
+.align-center { float:center; margin: 0 15px 15px 0; }
+.post-body { display: block; margin-left: auto; margin-right: auto }
+
+#diagram
+{
+  position : absolute;
+  top : 593px;
+  left : 30%;
+  color : #333;
+  background-color : #ffffff;
+  font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
 }
 
 #scans
@@ -161,7 +209,6 @@ h2 {
   top: 10px;
   width : 100%;
   padding : 6 0 0 0;
-
   height : 96px;
   color : #ffffff;
   background:#333367;
@@ -171,17 +218,46 @@ h2 {
   line-height : 1;
 }
 
-#banner-menu
+@font-face {
+    font-family: Miso;
+    src: url('fonts/miso.otf');
+}
+
+@font-face {
+    font-family: Titilum;
+    src: url('fonts/TitilliumText22L002.otf');
+}
+
+#text-menu
 {
-  position : absolute;
+  position : relative;
+  top: 80px;
+  width : 1000px;
+  height : 1px;
+  color : #E2491D;
+  background:#ffffff;
+  font-size:1.8em;
+  font-family: "Miso", "Arial", Sans-Serif;
+  font-weight : normal; 
+  text-align: center;
+  margin-left: auto ;
+  margin-right: auto ;
+}
+
+#banner-menu
+{ 
+  border-top: 1px solid #dddddd;
+  position : relative;
   top: 113px;
-  width : 100%;
-  height : 40px;
+  width : 80%;
+  height : 1px;
   color : #ffffff;
-  background:#555567;
+  background:#ffffff;
   font-size:1.0em;
   font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
   font-weight : normal; 
+  margin-left: auto ;
+  margin-right: auto ;
 }
  
 #predefinedScans
@@ -254,97 +330,6 @@ h2 {
   width:100px;
   font-size: 15px;
   margin: 0px 6px 0 0; 
-}
-
-#leftnavigation {
-  position : absolute;
-  left : 0;
-  width : 150px;
-  margin-left : 10px;
-  margin-top : 200px;
-  color : #000000;
-  padding : 3px;
-  border :  1px;
-}
-
-#rightnavigation {
-  position : absolute;
-  left : 80%;
-  top : 200px;
-  width : 140px;
-  padding-left : 10px;
-  z-index : 3;
-  color : #000000;
-  padding : 3px;
-}
-
-#tablink
-{
-  font-family : "Ubuntu","Bitstream Vera Sans Mono","Monaco","Lucida Console","monospace";
-  font-size : 12px;
-  position : absolute;
-  padding : 4px;
-  top : 135px;
-  bottom : 0px;
-  left : 20px;
-  width : 80px;
-  background-color : #3D67C3; 
-  -moz-border-radius-topright: 5px;
-  -moz-border-radius-topleft: 5px;
-  border-top-right-radius: 7px;
-  border-top-left-radius: 7px;
-}
-
-#tablink2
-{
-  font-family : "Ubuntu" ,"Bitstream Vera Sans Mono","Monaco","Lucida Console","monospace";
-  font-size : 12px;
-  position : absolute;
-  padding : 4px;
-  top : 135px;
-  bottom : 0px;
-  left : 115px;
-  width : 80px;
-  background-color : #3D67C3; 
-  -moz-border-radius-topright: 5px;
-  -moz-border-radius-topleft: 5px;
-  border-top-right-radius: 7px;
-  border-top-left-radius: 7px;
-
-}
-
-#tablink3
-{
-  font-family : "Bitstream Vera Sans Mono",Monaco,"Lucida Console",monospace;
-  font-size : 12px;
-  position : absolute;
-  padding : 4px;
-  top : 135px;
-  bottom : 0px;
-  left : 210px;
-  width : 80px;
-  background-color : #3D67C3; 
-  -moz-border-radius-topright: 5px;
-  -moz-border-radius-topleft: 5px;
-  border-top-right-radius: 7px;
-  border-top-left-radius: 7px;
-}
-
-#tablink4
-{
-  font-family : "Bitstream Vera Sans Mono",Monaco,"Lucida Console",monospace;
-  font-size : 12px;
-  position : absolute;
-  padding : 4px;
-  top : 135px;
-  bottom : 0px;
-  left : 305px;
-  width : 80px;
-  background-color : #3D67C3; 
-  -moz-border-radius-topright: 5px;
-  -moz-border-radius-topleft: 5px;
-  border-top-right-radius: 7px;
-  border-top-left-radius: 7px;
 }
 
 #content h1, #content h2 {

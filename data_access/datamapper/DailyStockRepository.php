@@ -50,9 +50,14 @@ class DailyStockRepository
         while($stocksRow = $this->_mySQLAdapter->fetch())
         {
             $searchHits[] .= $stocksRow[name];
+            $result->add(new Stock($stocksRow[isin], $stocksRow[name],
+                                   $stocksRow[listId], $stocklistRow[listName],
+                                   $row[date], $row[open], $row[close],
+                                   $row[high], $row[low], $row[volume]));
         }
 
-        return $searchHits;
+        //return $searchHits;
+        return $result;
 
         
 

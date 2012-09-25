@@ -28,8 +28,11 @@ include('domain/StrategyGapDown.php');
 include('presentation/table.php');
 include('presentation/table_rounded.php');
 include('presentation/helpers.php');
-
+include('candlestick.php');
+include('presentation/footer.php');
+include('presentation/content.php');
 include_once('presentation/header.php');
+
 $join = "Vill du kombinera och konfigurera dina s&ouml;kningar? Blir medlem och logga in!";
 $predefinedScans = array(
                                  array("&Ouml;ver 10-dagars SMA", "aboveSMA10"),
@@ -64,14 +67,23 @@ $predefinedScans = array(
 
 $menuOption = ""; ?>
 
-<? draw_header(); ?>
+        <? draw_html_header(); ?>
+
+        <?
+            $menu_entries = array("STOCK SCREENER", "S&Ouml;K", "BLI MEDLEM", "OM OSS", "KONTAKT");
+            draw_top_menu($menu_entries);
+        ?>
 
 <?
-        drawInfo();
-        drawMenu($predefinedScans, $predefinedScansBear);
+        //drawInfo();
+        //drawMenu($predefinedScans, $predefinedScansBear);
 
         $dailyStockRepository = new DailyStockRepository();
-
+        echo "<span position:absolute; style=\"height:1000px;\">";
+        draw_content($_GET['m']);
+        draw_footer_line();
+        draw_footer();
+        
         echo "<div id=\"scans\">";
         if ($_POST['formData'])
         {
@@ -79,14 +91,15 @@ $menuOption = ""; ?>
             $searchHits = $dailyStockRepository->FindByText($searchInput);
             
             echo "S&ouml;kresultat: \n<br>";
-            
             if($searchHits)
             {
-                foreach($searchHits as $hit)
+                $searchHitCollection = $searchHits->GetCollection();
+                foreach($searchHitCollection as $hit)
                 {
                     $name =  ucwords(strtolower(str_replace("-", " ",
-                      stripFrom($hit, "\""))));  
-                    echo "<a href=\".\">" . $name . "</a>";
+                      stripFrom($hit->_name, "\""))));  
+                    echo "<a href=\"index.php?m=stock&disp=" . $hit->_isin . "\">" . $name . "</a>";
+
                     echo "<br>";
                 }
             }
@@ -514,8 +527,7 @@ function drawInfo()
               <i>dinAktie.se &auml;r en tj&auml;nst som f&ouml;rser dig med ett bra underlag inf&ouml;r en aktieaff&auml;r. Vi tillhandah&aring;ller verktyg f&ouml;r att hitta just den sorts aktie-setup du &auml;r intresserad av. <br> 
 </i></div>";
         echo "<div id=\"banner2\"> 
-              <p style=\"color:#333367; font-size:21px;font-family:\"Georgia\";\">Crunchfish
-                S&ouml;k igenom hela Stockholmsb&ouml;rsen p&aring; n&aring;gra sekunder</p> 
+              <p style=\"color:#333367; font-size:21px;font-family:\"Georgia\";\">S&ouml;k igenom hela Stockholmsb&ouml;rsen p&aring; n&aring;gra sekunder</p> 
                 Minska tiden du sitter och tittar p&aring; helt ointressanta aktier. dinAktie.se hj&auml;lper dig att hitta aktier som passar din strategi. 
 </i></div>";
     }
