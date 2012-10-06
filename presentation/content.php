@@ -22,7 +22,7 @@ function draw_content($menu_option)
         $dailyStockRepository = new DailyStockRepository();
         $sCollection = $dailyStockRepository->FindByIsin("MEDA-B.ST", 120);
         $col = $sCollection->GetCollection();
-        do_diagram($col, 0, 107);
+        do_diagram($col);
         echo "<img src=\"plot.png\" class=\"post-body\" style=\"margin-top:10%\">";
         return;
     } else {
@@ -30,6 +30,7 @@ function draw_content($menu_option)
         {
             case "R": /* Stock screener */
             {
+                draw_stock_screener();
                 break;
             }
             case "K": /* Sök */
@@ -54,15 +55,15 @@ function draw_content($menu_option)
                 
                 break;
             }
-            case "stock": /* Kontakt */
+            case "stock": /* Show single stock */
             {   
                 $stock_ticker = $_GET['disp'];
                 $dailyStockRepository = new DailyStockRepository();
-                $sCollection = $dailyStockRepository->FindByIsin($stock_ticker, 120);
+                $sCollection = $dailyStockRepository->FindByIsin($stock_ticker, 150);
                 $col = $sCollection->GetCollection();
                 do_diagram($col, 0, 107);
                 
-        echo "<img src=\"plot.png\" class=\"post-body\" style=\"margin-top:10%\">";
+        echo "<img src=\"plot.jpg\" class=\"post-body\" style=\"margin-top:10%\">";
                 break;
             }
             default:
@@ -70,7 +71,18 @@ function draw_content($menu_option)
         }
     }
 }
+function draw_stock_screener()
+{
+    echo "<div style=\"border:1px dotted #bbbbbb; position:absolute; top:130px; height:410px; left:20%;  \">";
+echo " <select>
+  <option value=\"volvo\">SMA</option>
+  <option value=\"saab\">Volume</option>
+  <option value=\"mercedes\">Mercedes</option>
+  <option value=\"audi\">Audi</option>
+</select>";
+    echo "<p1 style=\"font-family: Titilum; color : #676D71; font-size: 0.9em; \">Stock screener</p1>";
+    echo "</div>";
 
-
+}
 
 ?>

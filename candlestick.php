@@ -1,75 +1,62 @@
 <?
+include('domain/chart_metrics.php');
 
-function get_y_min($collection)
+function get_y_tics_label($stock_price)
 {
-    if (!isset($collection))
-        die("Empty collection in get_y_min");
-    $min = $collection[0]->_low;
+    if($stock_price <= 1)
+        return 0.1;
+    if ($stock_price > 1 && $stock_price <= 50)
+        return 1;
+    if ($stock_price > 50 && $stock_price <= 100)
+        return 2;
+    if ($stock_price > 100 && $stock_price <= 200)
+        return 3;
+    if ($stock_price > 200 && $stock_price <= 300)
+        return 5;
     
-    foreach($collection as $stock)
-    {
-        if ($stock->_low < $min)
-            $min = $stock->_low;
-    }
-    return $min;
+    return 10;
 }
 
-function get_y_max($collection)
+function do_diagram($stock_collection)
 {
-    if (!isset($collection))
-        die("Empty collection in get_y_max");
-    $max = 0;
     
-    foreach($collection as $stock)
-    {
-        if ($stock->_high > $max)
-            $max = $stock->_high;
-    }
-    return $max;
-}
-
-function get_xtics($collection)
-{
-    if (!isset($collection))
-        die("Empty collection in get_xtics\n");
-
-    $i = 0;
-    for($j = count($collection); $j >= 0; $j--)
-    {
-        if ($i % 20 == 0 || $j == count($collection))
-        {
-            $str .= "\"" .$collection[$j]->_date . "\" " . ($i+1) . ", ";
-        }
-        $i++;
-    }
-    
-    $str = substr($str , 0 ,-2); 
-    return $str;
-}
-
-function do_diagram($stock_collection, $y_max, $y_min)
-{
-    if (!isset($stock_collection))
+    if (!isset($stock_collection)) {
+        echo "do_diagram empty collection";
         return;
-    $y_max = get_y_max($stock_collection)+1; 
-    $y_min = get_y_min($stock_collection)-1;
-    $xtics = get_xtics($stock_collection);
+    }
+    $stock_collection2 = $stock_collection;
+    $stock_collection = array_slice($stock_collection2, 0, 120);
+    $strategy = new StrategySMA($stock_collection2, 30); 
+    $mean_10_array = $strategy->get_avg(10);
+    $mean_30_array = $strategy->get_avg(30);
+    //echo count($mean_30_array);
+    //echo " ";
+    //echo count($stock_collection);
+    
+    $chart_metrics = new ChartMetric($stock_collection);
+    
+    $y_max = $chart_metrics->_y_max+1; 
+    $y_min = $chart_metrics->_y_min-1;
+    $xtics = $chart_metrics->_xtics;
+
     //$xtics = "\"0501\" 1, \"0505\" 5, \"0510\" 10";
     $chart_type = "candlesticks";
     //$chart_type = "financebars";
     $currency = "SEK";
     $diagram_title = $stock_collection[0]->_isin;
-    $x_width = 680;
+    $x_width = 640;
     $y_width = 320;
-    $font_size = 7.5;
+    $font_size = 7.0;
     $font = "/home/ke2/Verdana.ttf";
-    $output_file_name = "plot.png";
+    $output_file_name = "plot.jpg";
      
     $data_handle = fopen("candlesticks_bull.dat", "wr");
     $bear_handle = fopen("candlesticks_bear.dat", "wr");
-    if ($data_handle && $bear_handle)
+    $mean_handle = fopen("candlesticks_mean.dat", "wr");
+    $mean_index = 1;
+    if ($data_handle && $bear_handle && $mean_handle)
     {
-        for($cnt = count($stock_collection); $cnt >= -1; $cnt--)
+        for($cnt = count($stock_collection); $cnt >= 0; $cnt--)
         {
             if($stock_collection[$cnt]->_open < $stock_collection[$cnt]->_close)
             {
@@ -78,6 +65,7 @@ function do_diagram($stock_collection, $y_max, $y_min)
                                      $stock_collection[$cnt]-> _close . " " .
                                      $stock_collection[$cnt]-> _high . " " .
                                      $stock_collection[$cnt]-> _open . " " .
+                                     $stock_collection[$cnt]-> _volume . " " .
                                     "\n");    
             } else {
                 fwrite($data_handle, count($stock_collection)-$cnt . " ".
@@ -85,37 +73,68 @@ function do_diagram($stock_collection, $y_max, $y_min)
                                      $stock_collection[$cnt]-> _close . " " .
                                      $stock_collection[$cnt]-> _high . " " .
                                      $stock_collection[$cnt]-> _open . " " .
+                                     $stock_collection[$cnt]-> _volume . " " .
                                     "\n");    
             }
+            fwrite($mean_handle, count($stock_collection)-$cnt . " ".
+                                     "90" . " ".
+                                     $mean_30_array[$mean_index]->_mean . "\n");
+            $mean_index++;
         }
             fclose($data_handle);
             fclose($bear_handle);
+            fclose($mean_handle);
     } else { die("data_error"); }
-
+    
+    $ytics_divisor = get_y_tics_label($stock_collection[0]->_close);
     $flush_to_file = "
-    set terminal png transparent enhanced font \"". $font .",".$font_size ."\" size " . $x_width . ", ".$y_width . "
+    set terminal jpeg transparent enhanced font \"". $font .",".$font_size ."\" size " . $x_width . ", ".$y_width . "
+
     set output '/var/www/dinAktie/" . $output_file_name ."'
-    set border 15 lt rgb \"#ddddff\"
+set object 7 rect from graph 0.0,graph 1.0 to graph 1.0 fs solid 0.30 fc rgb \"#eeeeff\" behind
+    set key left top
+    set multiplot
     set bars 2.0
     set title \"" . $diagram_title ."\" 
     set style fill solid 0.75 border
     set xrange [0:". (count($stock_collection)+1)."]
-    set xtics (". $xtics .") textcolor lt -1
     set mytics 2 
     set mxtics 1
     set grid lc rgb \"#ddddff\" lt 1
     set grid xtics ytics mxtics mytics
     set y2label '" . $currency . "' tc lt -1
     set y2range [ ". $y_min ." : " . $y_max ." ]
-    set y2tics " . ($y_min+2) .", 2.0 mirror textcolor lt -1
-    set yrange [ ". $y_min ." : ". $y_max ." ]
-    set ytics 0, " . ($y_max - $y_min)/10 ." nomirror
+    set y2tics " . (floor(($y_min+2))) .", $ytics_divisor mirror textcolor lt -1
+    set yrange [ ". ($y_min-$ytics_divisor) ." : ". $y_max ." ]
     set format y \"\" 
-    set style fill solid border -1
+    set format x \"\"
+    set style fill solid 0.8 border -1
+set bmargin 2
+set lmargin  9
+set rmargin  4.0
+set tmargin  2 
+set style line 3 lt 3 lw 1.0 lc rgb \"#2F6FDE\"
     plot 'candlesticks_bull.dat' using 1:3:2:4:5 with ". $chart_type ." notitle, \
-         'candlesticks_bear.dat' using 1:5:2:4:3 with ". $chart_type ." notitle";
-    
-
+         'candlesticks_bear.dat' using 1:5:2:4:3 with ". $chart_type ." notitle, \
+         'candlesticks_mean.dat' using 1:2 title \"SMA(10) " . $mean_10_array[count($mean_10_array)-1]->_mean ."\" with lines ls 3, \
+         'candlesticks_mean.dat' using 1:3 title \"SMA(30) " . $mean_30_array[count($mean_30_array)-1]->_mean ."\" with lines ls 3
+    set boxwidth 1.0
+set y2label  \"\"
+set style fill solid 0.8 border 22
+set border 3
+unset title
+set size 1.0, 0.25
+set y2tics \"\"
+set yrange [0:". ($chart_metrics->_max_vol) ."]
+set ylabel \"Volym\" 
+set ytics (0, ". ($chart_metrics->_max_vol) .") tc lt -1
+set format y \"%1.0f\" 
+    set xrange [0:". (count($stock_collection)+1)."]
+unset mytics
+    set xtics (". $xtics .") textcolor lt -1
+    plot 'candlesticks_bear.dat' using 1:6 notitle with boxes lt 26, \
+         'candlesticks_bull.dat' using 1:6 notitle with boxes lt 22";
+        
     $file_flags = "x";
     if (file_exists("cs.plot"))
         $file_flags = "wr";
@@ -130,8 +149,7 @@ function do_diagram($stock_collection, $y_max, $y_min)
     $file = fread($file_handle, 4096);
 
     //echo $file;
-    system("gnuplot cs.plot");
-    
+    system("/usr/local/bin/gnuplot cs.plot");
 }
 ?>
 

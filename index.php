@@ -3,6 +3,7 @@ include ('data_access/datamapper/DailyStockRepository.php');
 include('data_access/largeCap.php');
 include('data_access/midCap.php');
 include('data_access/smallCap.php');
+include('data_access/firstNorth.php');
 include('data_access/indexList.php');
 include('domain/Strategy52WeekHigh.php');
 include('domain/Strategy52WeekLow.php');
@@ -70,7 +71,7 @@ $menuOption = ""; ?>
         <? draw_html_header(); ?>
 
         <?
-            $menu_entries = array("STOCK SCREENER", "S&Ouml;K", "BLI MEDLEM", "OM OSS", "KONTAKT");
+            $menu_entries = array("STOCK SCREENER", "LARM", "BLI MEDLEM", "OM OSS", "KONTAKT");
             draw_top_menu($menu_entries);
         ?>
 
@@ -88,33 +89,46 @@ $menuOption = ""; ?>
         if ($_POST['formData'])
         {
             $searchInput = $_POST['formData'];
-            $searchHits = $dailyStockRepository->FindByText($searchInput);
             
-            echo "S&ouml;kresultat: \n<br>";
-            if($searchHits)
+            if (strlen($searchInput) < 2)
             {
-                $searchHitCollection = $searchHits->GetCollection();
-                foreach($searchHitCollection as $hit)
-                {
-                    $name =  ucwords(strtolower(str_replace("-", " ",
-                      stripFrom($hit->_name, "\""))));  
-                    echo "<a href=\"index.php?m=stock&disp=" . $hit->_isin . "\">" . $name . "</a>";
-
-                    echo "<br>";
-                }
+                echo "S&ouml;kstr&auml;ngen &auml;r f&ouml;r kort.";
             }
+            else
+            {
+                    $searchHits = $dailyStockRepository->FindByText($searchInput);
+                    
+                    echo "S&ouml;kresultat: \n<br>";
+                    if($searchHits)
+                    {
+                        $searchHitCollection = $searchHits->GetCollection();
+                        if (count($searchHitCollection) == 1)
+                            echo "It should be possible to display one search hit directly as chart";
+                        else
+                        {
+                            foreach($searchHitCollection as $hit)
+                            {
+                                $name =  ucwords(strtolower(str_replace("-", " ",
+                                  stripFrom($hit->_name, "\""))));  
+                                echo "<a href=\"index.php?m=stock&disp=" . $hit->_isin . "\">" . $name . "</a>";
+
+                                echo "<br>";
+                            }
+                        }
+                    }
+                }
         }
 
-        $allLists = array_merge($largeCap, $midCap, $smallCap);
+        $allLists = array_merge($largeCap, $midCap, $smallCap, $firstNorth);
         $res = array(); 
         
         if($_GET['name'] == "aboveSMA10")
         {
-            foreach($allLists as $symbol) 
+            //foreach($allLists as $symbol) 
             { 
-                $stockCollection = $dailyStockRepository->FindByIsin($symbol, 10);
+                $stockCollection = $dailyStockRepository->FindByIsin("ABB.ST", 60);
                 $collection = $stockCollection->GetCollection(); 
-                $strategy = new StrategyAboveSMA($collection, 10); 
+                $strategy = new StrategyAboveSMA($collection, 30); 
                 if($strategy->scan())
                 {
                     $res = buildResult($res, $collection);

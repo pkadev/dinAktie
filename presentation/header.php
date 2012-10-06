@@ -17,7 +17,7 @@ echo "
 //           echo "<div id=\"banner-description\" class=\"banner-description\">";
            echo " <img style=\"float:left; margin-left:15px;\" src=\"logo.png\"/>";
            echo "<form action=\"index.php?m=search\" method=\"post\">
-                    <input id=\"searchBox\" name=\"formData\" type=\"text\" />
+                    <input id=\"searchBox\" name=\"formData\" type=\"text\" autofocus=\"autofocus\"/>
                     <input id=\"searchButton\" type=\"submit\" name=\"formSearch\"" .
                    " value=\"S&ouml;k aktie\" action=\"\" /> </form>";
          echo "</div>";
