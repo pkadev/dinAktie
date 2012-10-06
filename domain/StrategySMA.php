@@ -24,7 +24,7 @@ class StrategySMA implements IStrategy
     {
         $this->_period = $period;
         $this->_dataCollection = $dataCollection;
-echo "<br><br>";
+echo "<br>";
     }
 
     public function get_avg($value)
@@ -33,12 +33,12 @@ echo "<br><br>";
         //echo "Data points: " .$cnt . "<br>";
         //echo "First data point: " . $this->_dataCollection[0]->_date. "<br>";
         //echo "Last data point: " .$this->_dataCollection[$cnt-1]->_date. "<br>" ;
-        $start = $cnt - $this->_period ;
+        $start = $cnt - $value ;
         $mean_sum = 0;
         $mean = array();
         array_push($mean, new ChartMeanEntry(0, "0"));
 //echo "<br><br>";
-        $limit = (count($this->_dataCollection)-$this->_period+1);
+        $limit = (count($this->_dataCollection)-$value+1);
         for ($j = 0; $j < $limit; $j++) {
             for($i = $start; $i < $cnt; $i++)
             {
@@ -46,7 +46,7 @@ echo "<br><br>";
                 //     $this->_dataCollection[$i-$j]->_close . "<br>";
                 $mean_sum += $this->_dataCollection[$i-$j]->_close;
             }
-            $mean_obj = new ChartMeanEntry($this->_dataCollection[$i-$j-$this->_period]->_date, round($mean_sum / $this->_period, 2));
+            $mean_obj = new ChartMeanEntry($this->_dataCollection[$i-$j-$value]->_date, round($mean_sum / $value, 2));
             array_push($mean, $mean_obj);
             $mean_sum = 0;
         }
@@ -58,11 +58,11 @@ echo "<br><br>";
     public function scan()
     {
         $this->get_avg();
-        for($i=0; $i < $this->_period; $i++)
+        for($i=0; $i < $value; $i++)
         {
             $sum += $this->_dataCollection[$i]->_close;
         }
-        $result = ($sum / $this->_period);        
+        $result = ($sum / $value);        
         return $result;
     }
 }

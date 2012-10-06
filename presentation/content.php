@@ -59,7 +59,7 @@ function draw_content($menu_option)
             {   
                 $stock_ticker = $_GET['disp'];
                 $dailyStockRepository = new DailyStockRepository();
-                $sCollection = $dailyStockRepository->FindByIsin($stock_ticker, 150);
+                $sCollection = $dailyStockRepository->FindByIsin($stock_ticker, 170);
                 $col = $sCollection->GetCollection();
                 do_diagram($col, 0, 107);
                 

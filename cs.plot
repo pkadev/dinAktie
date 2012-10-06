@@ -1,8 +1,8 @@
 
-    set terminal jpeg transparent enhanced font "/home/ke2/Verdana.ttf,7" size 640, 320
+    set terminal jpeg transparent enhanced font "/home/ke2/Verdana.ttf,7" size 640, 400
 
     set output '/var/www/dinAktie/plot.jpg'
-set object 7 rect from graph 0.0,graph 1.0 to graph 1.0 fs solid 0.30 fc rgb "#eeeeff" behind
+set object 7 rect from graph 0.0,graph 1.0 to graph 1.0 fs solid 0.30 fc rgb "#666666" behind
     set key left top
     set multiplot
     set bars 2.0
@@ -11,7 +11,7 @@ set object 7 rect from graph 0.0,graph 1.0 to graph 1.0 fs solid 0.30 fc rgb "#e
     set xrange [0:121]
     set mytics 2 
     set mxtics 1
-    set grid lc rgb "#ddddff" lt 1
+    set grid lc rgb "#aaaaaa" lt 1
     set grid xtics ytics mxtics mytics
     set y2label 'SEK' tc lt -1
     set y2range [ 75.3 : 95 ]
@@ -24,11 +24,14 @@ set bmargin 2
 set lmargin  9
 set rmargin  4.0
 set tmargin  2 
+set style line 1 lt 3 lw 1.0 lc rgb "#FCF900"
+set style line 2 lt 3 lw 1.0 lc rgb "#ff2222"
 set style line 3 lt 3 lw 1.0 lc rgb "#2F6FDE"
     plot 'candlesticks_bull.dat' using 1:3:2:4:5 with candlesticks notitle, \
          'candlesticks_bear.dat' using 1:5:2:4:3 with candlesticks notitle, \
-         'candlesticks_mean.dat' using 1:2 title "SMA(10) 89.37" with lines ls 3, \
-         'candlesticks_mean.dat' using 1:3 title "SMA(30) 89.37" with lines ls 3
+         'candlesticks_mean.dat' using 1:2 title "SMA(10) 89.1" with lines ls 1, \
+         'candlesticks_mean.dat' using 1:3 title "SMA(20) 89.67" with lines ls 2, \
+         'candlesticks_mean.dat' using 1:4 title "SMA(50) 90.13" with lines ls 3
     set boxwidth 1.0
 set y2label  ""
 set style fill solid 0.8 border 22

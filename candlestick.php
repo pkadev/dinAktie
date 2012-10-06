@@ -24,11 +24,16 @@ function do_diagram($stock_collection)
         echo "do_diagram empty collection";
         return;
     }
-    $stock_collection2 = $stock_collection;
-    $stock_collection = array_slice($stock_collection2, 0, 120);
-    $strategy = new StrategySMA($stock_collection2, 30); 
-    $mean_10_array = $strategy->get_avg(10);
-    $mean_30_array = $strategy->get_avg(30);
+    $stock_collection50 = array_slice($stock_collection, 0, 170);
+    $stock_collection20 = array_slice($stock_collection, 0, 140);
+    $stock_collection10 = array_slice($stock_collection, 0, 130);
+    $stock_collection = array_slice($stock_collection20, 0, 120);
+    $strategy10 = new StrategySMA($stock_collection10, 0); 
+    $strategy20 = new StrategySMA($stock_collection20, 0); 
+    $strategy50 = new StrategySMA($stock_collection50, 0); 
+    $mean_10_array = $strategy10->get_avg(10);
+    $mean_20_array = $strategy20->get_avg(20);
+    $mean_50_array = $strategy50->get_avg(50);
     //echo count($mean_30_array);
     //echo " ";
     //echo count($stock_collection);
@@ -45,7 +50,7 @@ function do_diagram($stock_collection)
     $currency = "SEK";
     $diagram_title = $stock_collection[0]->_isin;
     $x_width = 640;
-    $y_width = 320;
+    $y_width = 400;
     $font_size = 7.0;
     $font = "/home/ke2/Verdana.ttf";
     $output_file_name = "plot.jpg";
@@ -77,8 +82,9 @@ function do_diagram($stock_collection)
                                     "\n");    
             }
             fwrite($mean_handle, count($stock_collection)-$cnt . " ".
-                                     "90" . " ".
-                                     $mean_30_array[$mean_index]->_mean . "\n");
+                                     $mean_10_array[$mean_index]->_mean . " ".
+                                     $mean_20_array[$mean_index]->_mean . " ".
+                                     $mean_50_array[$mean_index]->_mean . "\n");
             $mean_index++;
         }
             fclose($data_handle);
@@ -91,7 +97,7 @@ function do_diagram($stock_collection)
     set terminal jpeg transparent enhanced font \"". $font .",".$font_size ."\" size " . $x_width . ", ".$y_width . "
 
     set output '/var/www/dinAktie/" . $output_file_name ."'
-set object 7 rect from graph 0.0,graph 1.0 to graph 1.0 fs solid 0.30 fc rgb \"#eeeeff\" behind
+set object 7 rect from graph 0.0,graph 1.0 to graph 1.0 fs solid 0.30 fc rgb \"#666666\" behind
     set key left top
     set multiplot
     set bars 2.0
@@ -100,7 +106,7 @@ set object 7 rect from graph 0.0,graph 1.0 to graph 1.0 fs solid 0.30 fc rgb \"#
     set xrange [0:". (count($stock_collection)+1)."]
     set mytics 2 
     set mxtics 1
-    set grid lc rgb \"#ddddff\" lt 1
+    set grid lc rgb \"#aaaaaa\" lt 1
     set grid xtics ytics mxtics mytics
     set y2label '" . $currency . "' tc lt -1
     set y2range [ ". $y_min ." : " . $y_max ." ]
@@ -113,11 +119,14 @@ set bmargin 2
 set lmargin  9
 set rmargin  4.0
 set tmargin  2 
+set style line 1 lt 3 lw 1.0 lc rgb \"#FCF900\"
+set style line 2 lt 3 lw 1.0 lc rgb \"#ff2222\"
 set style line 3 lt 3 lw 1.0 lc rgb \"#2F6FDE\"
     plot 'candlesticks_bull.dat' using 1:3:2:4:5 with ". $chart_type ." notitle, \
          'candlesticks_bear.dat' using 1:5:2:4:3 with ". $chart_type ." notitle, \
-         'candlesticks_mean.dat' using 1:2 title \"SMA(10) " . $mean_10_array[count($mean_10_array)-1]->_mean ."\" with lines ls 3, \
-         'candlesticks_mean.dat' using 1:3 title \"SMA(30) " . $mean_30_array[count($mean_30_array)-1]->_mean ."\" with lines ls 3
+         'candlesticks_mean.dat' using 1:2 title \"SMA(10) " . $mean_10_array[count($mean_10_array)-1]->_mean ."\" with lines ls 1, \
+         'candlesticks_mean.dat' using 1:3 title \"SMA(20) " . $mean_20_array[count($mean_20_array)-1]->_mean ."\" with lines ls 2, \
+         'candlesticks_mean.dat' using 1:4 title \"SMA(50) " . $mean_50_array[count($mean_50_array)-1]->_mean ."\" with lines ls 3
     set boxwidth 1.0
 set y2label  \"\"
 set style fill solid 0.8 border 22
