@@ -24,7 +24,6 @@ class StrategySMA implements IStrategy
     {
         $this->_period = $period;
         $this->_dataCollection = $dataCollection;
-echo "<br>";
     }
 
     public function get_avg($value)

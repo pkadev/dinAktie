@@ -10,7 +10,7 @@ function draw_contact_page()
     echo "<input type=\"submit\" value=\"Skicka\">";
     echo "</form>";
     echo "</div>";             
-    mail("per.karlstedt@innocode.se", "Mail from dinAktie", "You need to add more setups!");
+    //mail("per.karlstedt@innocode.se", "Mail from dinAktie", "You need to add more setups!");
 
 }
 
@@ -20,7 +20,7 @@ function draw_content($menu_option)
     if (!isset($menu_option)) {
     
         $dailyStockRepository = new DailyStockRepository();
-        $sCollection = $dailyStockRepository->FindByIsin("MEDA-B.ST", 120);
+        $sCollection = $dailyStockRepository->FindByIsin("MEDA-B.ST", 170);
         $col = $sCollection->GetCollection();
         do_diagram($col);
         echo "<img src=\"plot.png\" class=\"post-body\" style=\"margin-top:10%\">";
@@ -58,12 +58,13 @@ function draw_content($menu_option)
             case "stock": /* Show single stock */
             {   
                 $stock_ticker = $_GET['disp'];
+
                 $dailyStockRepository = new DailyStockRepository();
                 $sCollection = $dailyStockRepository->FindByIsin($stock_ticker, 170);
                 $col = $sCollection->GetCollection();
                 do_diagram($col, 0, 107);
                 
-        echo "<img src=\"plot.jpg\" class=\"post-body\" style=\"margin-top:10%\">";
+        echo "<img src=\"plot.jpg\" class=\"post-body\" style=\"margin-top:130px\">";
                 break;
             }
             default:

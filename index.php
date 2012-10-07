@@ -33,7 +33,6 @@ include('candlestick.php');
 include('presentation/footer.php');
 include('presentation/content.php');
 include_once('presentation/header.php');
-
 $join = "Vill du kombinera och konfigurera dina s&ouml;kningar? Blir medlem och logga in!";
 $predefinedScans = array(
                                  array("&Ouml;ver 10-dagars SMA", "aboveSMA10"),
@@ -80,44 +79,16 @@ $menuOption = ""; ?>
         //drawMenu($predefinedScans, $predefinedScansBear);
 
         $dailyStockRepository = new DailyStockRepository();
+        if ($_POST['formData'])
+        {
+            draw_search_result($dailyStockRepository);
+        }
         echo "<span position:absolute; style=\"height:1000px;\">";
         draw_content($_GET['m']);
         draw_footer_line();
         draw_footer();
         
         echo "<div id=\"scans\">";
-        if ($_POST['formData'])
-        {
-            $searchInput = $_POST['formData'];
-            
-            if (strlen($searchInput) < 2)
-            {
-                echo "S&ouml;kstr&auml;ngen &auml;r f&ouml;r kort.";
-            }
-            else
-            {
-                    $searchHits = $dailyStockRepository->FindByText($searchInput);
-                    
-                    echo "S&ouml;kresultat: \n<br>";
-                    if($searchHits)
-                    {
-                        $searchHitCollection = $searchHits->GetCollection();
-                        if (count($searchHitCollection) == 1)
-                            echo "It should be possible to display one search hit directly as chart";
-                        else
-                        {
-                            foreach($searchHitCollection as $hit)
-                            {
-                                $name =  ucwords(strtolower(str_replace("-", " ",
-                                  stripFrom($hit->_name, "\""))));  
-                                echo "<a href=\"index.php?m=stock&disp=" . $hit->_isin . "\">" . $name . "</a>";
-
-                                echo "<br>";
-                            }
-                        }
-                    }
-                }
-        }
 
         $allLists = array_merge($largeCap, $midCap, $smallCap, $firstNorth);
         $res = array(); 
@@ -574,6 +545,38 @@ function drawMenu($menuOptionsBull, $menuOptionsBear)
         case "bull":
         break;
     }
+}
+function draw_search_result($dailyStockRepository)
+{
+            $searchInput = $_POST['formData'];
+            
+            if (strlen($searchInput) < 2)
+            {
+                echo "S&ouml;kstr&auml;ngen &auml;r f&ouml;r kort.";
+            }
+            else
+            {
+                    $searchHits = $dailyStockRepository->FindByText($searchInput);
+                    
+                    if($searchHits)
+                    {
+                        $searchHitCollection = $searchHits->GetCollection();
+                        if (count($searchHitCollection) == 1) {
+                            
+                            $_GET['disp'] = $searchHitCollection[0]->_isin;
+                            $_GET['m'] = "stock";
+                        } else {
+                            foreach($searchHitCollection as $hit)
+                            {
+                                $name =  ucwords(strtolower(str_replace("-", " ",
+                                  stripFrom($hit->_name, "\""))));  
+                                echo "<a href=\"index.php?m=stock&disp=" . $hit->_isin . "\">" . $name . "</a>";
+
+                                echo "<br>";
+                            }
+                        }
+                    }
+                }
 }
   ?>
 <script type="text/javascript">
