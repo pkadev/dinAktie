@@ -19,8 +19,7 @@ function get_y_tics_label($stock_price)
 
 function do_diagram($stock_collection)
 {
-    
-    if (!isset($stock_collection)) {
+    if (count($stock_collection) == 0) {
         echo "do_diagram empty collection";
         return;
     }
@@ -109,7 +108,6 @@ set object 7 rect from graph 0.0,graph 1.0 to graph 1.0 fs solid 0.30 fc rgb \"#
     set grid lc rgb \"#aaaaaa\" lt 1
     set grid xtics ytics mxtics mytics
     set y2label '" . $currency . "' tc lt -1
-    set y2range [ ". $y_min ." : " . $y_max ." ]
     set y2tics " . (floor(($y_min+2))) .", $ytics_divisor mirror textcolor lt -1
     set yrange [ ". ($y_min-$ytics_divisor) ." : ". $y_max ." ]
     set format y \"\" 
