@@ -109,11 +109,13 @@
         
         return $data;
     }
+
     dump_table();
     create_table();
     insert_into_table(0, "Large Cap");
     insert_into_table(1, "Mid Cap");
     insert_into_table(2, "Small Cap");
+    insert_into_table(3, "First North");
 print ("<table border=1 cellpadding=0 cellspacing=1><tr><td><b>List Id</td><td><b>List Name</td></tr>");
 
     $data = select_all_from_table(TABLE_NAME);

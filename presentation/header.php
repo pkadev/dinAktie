@@ -20,7 +20,6 @@ echo "
                     <input id=\"searchBox\" name=\"formData\" type=\"text\" autofocus=\"autofocus\"/>
                     <input id=\"searchButton\" type=\"submit\" name=\"formSearch\"" .
                    " value=\"S&ouml;k aktie\" action=\"\" /> </form>";
-         echo "</div>";
 }
 function draw_top_menu($entries)
 {

@@ -32,43 +32,14 @@ include('presentation/helpers.php');
 include('candlestick.php');
 include('presentation/footer.php');
 include('presentation/content.php');
+include_once('presentation/screen_manager.php');
 include_once('presentation/header.php');
-$join = "Vill du kombinera och konfigurera dina s&ouml;kningar? Blir medlem och logga in!";
-$predefinedScans = array(
-                                 array("&Ouml;ver 10-dagars SMA", "aboveSMA10"),
-                                 array("&Ouml;ver 20-dagars SMA", "aboveSMA20"),
-                                 array("&Ouml;ver 50-dagars SMA", "aboveSMA50"),
-                                 array("&Ouml;ver 200-dagars SMA", "aboveSMA200"),
-                                 array("SMA50 korsar SMA200", "bullish50-200"),
-                                 array("Nya 52-veckors h&ouml;gsta", "52weekHigh"),
-                             //    array("Traders Action Zone", "taz"),
-                                 array("B&auml;ttre &auml;n OMXS30 idag", "bullOMXS30"),
-                                 array("&Ouml;kar med stor volym", "volGain"),
-                                 array("&Ouml;vers&aring;ld RSI","oversoldRSI"),
-                                 array("Upp minst 15% p&aring; tre dagar","upShort"),
-                                 array("Kurs +2%, Volym +25%", "up"),
-                                 array("Gap Upp&aring;t", "gapUps"),
-                                ); 
-
-        $predefinedScansBear = array(
-                                 array("Under 10-dagars SMA", "belowSMA10"),
-                                 array("Under 20-dagars SMA", "belowSMA20"),
-                                 array("Under 50-dagars SMA", "belowSMA50"),
-                                 array("Under 200-dagars SMA", "belowSMA200"),
-                                 array("SMA50 korsar SMA200", "bearish50-200"),
-                                 array("Nya 52-veckors l&auml;gsta", "52weekLow"),
-                                 array("S&auml;mre &auml;n OMXS30 idag", "bearOMXS30"),
-                                 array("Minskar med stor volym", "volLoss"),
-                                 array("&Ouml;verk&ouml;pt RSI","overboughtRSI"),
-                                 array("Ner minst 15% p&aring; tre dagar","downShort"),
-                                 array("Kurs -2%, Volym -25%", "down"),
-                                 array("Gap ned&aring;t", "gapDowns"),
-                            );
+$join = "Vill du kombinera och konfigurera dina s&ouml;kningar? Blir medlem och logga in!" .
+        "<br>Show shakers and movers, risers and decliners on start page!<br>";
 
 $menuOption = ""; ?>
 
         <? draw_html_header(); ?>
-
         <?
             $menu_entries = array("STOCK SCREENER", "LARM", "BLI MEDLEM", "OM OSS", "KONTAKT");
             draw_top_menu($menu_entries);
@@ -550,33 +521,35 @@ function draw_search_result($dailyStockRepository)
 {
             $searchInput = $_POST['formData'];
             
-            if (strlen($searchInput) < 2)
+            if (strlen($searchInput) < 3)
             {
                 echo "S&ouml;kstr&auml;ngen &auml;r f&ouml;r kort.";
             }
             else
             {
+                    echo "<div style=\"border:0px dotted #bbbbbb; position:absolute;".
+                         " top:140px; height:410px; right:20%; left:20%;  \">";
                     $searchHits = $dailyStockRepository->FindByText($searchInput);
                     
-                    if($searchHits)
-                    {
-                        $searchHitCollection = $searchHits->GetCollection();
+                    $searchHitCollection = $searchHits->GetCollection();
+                    if (count($searchHitCollection) > 0) {
                         if (count($searchHitCollection) == 1) {
-                            
                             $_GET['disp'] = $searchHitCollection[0]->_isin;
                             $_GET['m'] = "stock";
                         } else {
-                            foreach($searchHitCollection as $hit)
-                            {
+                            foreach($searchHitCollection as $hit) {
                                 $name =  ucwords(strtolower(str_replace("-", " ",
-                                  stripFrom($hit->_name, "\""))));  
-                                echo "<a href=\"index.php?m=stock&disp=" . $hit->_isin . "\">" . $name . "</a>";
-
-                                echo "<br>";
+                                    stripFrom($hit->_name, "\""))));  
+                                echo "<a class=\"searchHits\" href=\"index.php?m=stock&disp=" .
+                                     $hit->_isin . "\">" . $name . "</a><br>";
                             }
+                        
                         }
+                    } else {
+                        echo "<p style=\"color:#E2491D; font-size:1.1em;\">Hittade inga aktier.</p>";
                     }
-                }
+                 echo "</div>";
+               }
 }
   ?>
 <script type="text/javascript">

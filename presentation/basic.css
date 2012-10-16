@@ -1,3 +1,50 @@
+    /* -------------------------------------------------- */
+    /* talltabs-orange */
+    /* -------------------------------------------------- */
+   /* #talltabs-orange {
+        clear:left;
+        float:left;
+        padding:0;
+        border-top:0px solid #FF8D3A;
+        width:100%;
+        overflow:hidden;
+        font-family:Georgia, serif;
+    }
+    #talltabs-orange ul {
+        float:left;
+        margin:0;
+        padding:0;
+        list-style:none;
+        position:relative;
+        left:50%;
+        text-align:center;
+    }
+    #talltabs-orange ul li {
+        display:block;
+        float:left;
+        list-style:none;
+        margin:0;
+        padding:0;
+        position:relative;
+        right:50%;
+    }
+    #talltabs-orange ul li a {
+        display:block;
+        float:left;
+        margin:0 1px 0 0;
+        padding:10px 10px 6px 10px;
+        background:#E2491D;
+        text-decoration:none;
+        color:#fff;
+    }
+    #talltabs-orange ul li a:hover {
+        padding:15px 10px 6px 10px;
+    }
+    #talltabs-orange ul li.active a,
+    #talltabs-orange ul li.active a:hover {
+        padding:15px 10px 6px 10px;
+    }
+*/
 #banner1
 {
     float:left;
@@ -92,6 +139,16 @@ a.darkLink:hover {text-decoration:underline;}
 a.darkLink:active {text-decoration:underline;}
 a.darklink:link { LINE-HEIGHT: 25px;}
 
+a.searchHits:link {font-size:0.8em;color:#222222;}      /* unvisited link */
+a.searchHits:visited {color:#222222;}  /* visited link */
+a.searchHits:hover {color:#222222;}  /* mouse over link */
+a.searchHits:active {color:#555555;}  /* selected link */ 
+a.searchHits:link {text-decoration:none;}
+a.searchHits:visited {text-decoration:none;}
+a.searchHits:hover {text-decoration:underline;}
+a.searchHits:active {text-decoration:underline;}
+a.searchHits:link { LINE-HEIGHT: 15px;}
+
 /* #E2491D Orange */
 /* #676D71 Gray */
 /* #9BDAE1 Cyan */
@@ -123,7 +180,7 @@ body {
 }
 
 p, ul, ol, li {
-  font : 10pt Arial,geneva,helvetica;
+  font : 10pt Titilum, Arial,geneva,helvetica;
 }
 
 h1 {

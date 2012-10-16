@@ -17,7 +17,7 @@ class StrategyOversoldRSI implements IStrategy
     public function scan()
     {
         $RSI = $this->_IStrategy->Scan();
-        if ($RSI < 30)
+        if ($RSI < 15)
         {
             return $RSI;
         }

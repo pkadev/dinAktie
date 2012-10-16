@@ -19,10 +19,10 @@
         function draw_center_sub_footer()
         {
             echo "<div id=\"footer_center\">";
-            echo "<p1 style=\"font-family: miso; color : #E2491D; font-size: 2.0em; \">BLI MEDLEM</p1>";
+            echo "\n <p1 style=\"font-family: miso; color : #E2491D; font-size: 2.0em; \">BLI MEDLEM</p1>";
             echo "<br><br>Att blir medlem &auml;r givetvis gratis. N&auml;r du registrar medlemskap f&aring;r" .
                  " du m&ouml;jlighet att spara alla dina s&ouml;kningar och inst&auml;llningar. Ett medlemskap".
-                 " ger dig ocks&aring &aring;tkomst till ut&ouml;kat finansdata.";
+                 " ger dig ocks&aring; &aring;tkomst till ut&ouml;kat finansdata.";
 
             echo "</div>";
 

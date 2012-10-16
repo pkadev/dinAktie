@@ -56,12 +56,11 @@ class StrategySMA implements IStrategy
     }    
     public function scan()
     {
-        $this->get_avg();
-        for($i=0; $i < $value; $i++)
+        for($i=0; $i < $this->_period; $i++)
         {
             $sum += $this->_dataCollection[$i]->_close;
         }
-        $result = ($sum / $value);        
+        $result = ($sum /$this->_period);        
         return $result;
     }
 }

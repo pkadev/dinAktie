@@ -60,7 +60,6 @@
                     "SCV-B.ST",
                     "SEB-A.ST",
                     "SEB-C.ST",
-                    "SECO-B.ST",
                     "SECU-B.ST",
                     "SMF.ST",
                     "SKA-B.ST",

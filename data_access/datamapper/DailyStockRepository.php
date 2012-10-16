@@ -2,6 +2,10 @@
 <?
 include ('DailyStockCollection.php');    
 include ('MySQLAdapter.php');
+include('largeCap.php');
+include('midCap.php');
+include('smallCap.php');
+include('firstNorth.php');
 
 class DailyStockRepository
 {
@@ -16,6 +20,28 @@ class DailyStockRepository
         {
             echo("SQL adapter failed to create instance<br>");
         }
+    }
+
+    public function FindByType($filter)
+    {
+        $this->_mySQLAdapter->connect();
+        $parsed_filters = array();
+        $combined_filters;
+
+        forEach($filter as $f)
+            $parsed_filters[] .= " AND " .$f->type ." ". $f->condition ." '". $f->value . "'";
+
+        foreach($parsed_filters as $filter)
+            $combined_filters .= $filter;
+
+        $this->_mySQLAdapter->select("daily", "date='2012-10-22'" .
+                                     $combined_filters, "isin", "date DESC");
+        while ($stocksRow = $this->_mySQLAdapter->fetch())
+        {
+            $result[] .= $stocksRow[isin];
+        }        
+
+            return $result;
     }
 
     public function FindByIsin($isin, $range = '')
@@ -45,36 +71,48 @@ class DailyStockRepository
         $this->_mySQLAdapter->connect();
 
         $result = new DailyStockCollection();
-        $this->_mySQLAdapter->select("stock", "name like '%" . $isin ."%'");
 
+        /* Search freetext in "NAME" */
+        $this->_mySQLAdapter->select("stock", "name like '%" . $isin ."%'");
         while($stocksRow = $this->_mySQLAdapter->fetch())
         {
-            $searchHits[] .= $stocksRow[name];
             $result->add(new Stock($stocksRow[isin], $stocksRow[name],
                                    $stocksRow[listId], $stocklistRow[listName],
                                    $row[date], $row[open], $row[close],
                                    $row[high], $row[low], $row[volume]));
         }
-
-        //return $searchHits;
-        return $result;
-
         
 
-        $this->_mySQLAdapter->select("stocklist", "listId='" . $stocksRow[listId] . "'");
-        $stocklistRow = $this->_mySQLAdapter->fetch();
-        
-        $num = $this->_mySQLAdapter->select("daily", "isin='" . $isin . "'", "*", "date DESC", $range);
-        while($row = $this->_mySQLAdapter->fetch())
-        { 
-            $result->add(new Stock($stocksRow[isin], $stocksRow[name],
-                                   $stocksRow[listId], $stocklistRow[listName],
-                                   $row[date], $row[open], $row[close],
-                                   $row[high], $row[low], $row[volume]));
+        /* Extract collection to avoid adding duplicate serch result */
+        $col = $result->GetCollection();
+
+        /* Search freetext in "ISIN" */
+        $this->_mySQLAdapter->select("stock", "isin like '%" . $isin ."%'");
+        while($stocksRow = $this->_mySQLAdapter->fetch())
+        {
+            
+            $unique_hit = true;
+            foreach($col as $hit) {
+                if ($hit->_isin == $stocksRow[isin]) {
+                    $unique_hit = false;
+                }
+            }
+            if ($unique_hit == true) {
+                    $result->add(new Stock($stocksRow[isin], $stocksRow[name],
+                                           $stocksRow[listId], $stocklistRow[listName],
+                                           $row[date], $row[open], $row[close],
+                                           $row[high], $row[low], $row[volume]));
+            } 
         }
+        
         $this->_mySQLAdapter->disconnect();
+
+                
+
         return $result;
     }
+
+
     public function Save(Stock $stock)
     {
         $data = array(isin => $stock->_isin, date => $stock->_date,

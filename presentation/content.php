@@ -1,4 +1,7 @@
 <?
+include_once('screen_manager.php');
+include_once('filter.php');
+
 function draw_contact_page()
 {
     echo "<div style=\"border:0px dotted black; position:absolute; top:130px; height:410px; left:20%;  \">";
@@ -50,6 +53,22 @@ function draw_content($menu_option)
                 draw_contact_page();
                 break;
             }
+            case "screen": /* Screen */
+            {
+                $cnt = count($_REQUEST[active]);
+                $filters = array();
+
+                for ($i = 0; $i < $cnt; $i++) {
+                    if($_REQUEST[active][$i] == "on") {
+                        array_push($filters, new Filter($_REQUEST[type][$i],
+                                   $_REQUEST[condition][$i], $_REQUEST[value][$i]));
+                    } 
+                }
+                
+                price_screen($filters);
+                echo "<br>";
+                break;
+            }
             case "search": /* Kontakt */
             {
                 
@@ -58,10 +77,14 @@ function draw_content($menu_option)
             case "stock": /* Show single stock */
             {   
                 $stock_ticker = $_GET['disp'];
-
+                //echo $stock_ticker;
                 $dailyStockRepository = new DailyStockRepository();
                 $sCollection = $dailyStockRepository->FindByIsin($stock_ticker, 170);
                 $col = $sCollection->GetCollection();
+                
+                if(count($col) == 0) {   
+                    die("Cannot draw empty collection");
+                }
                 do_diagram($col, 0, 107);
                 
         echo "<img src=\"plot.jpg\" class=\"post-body\" style=\"margin-top:130px\">";
@@ -71,19 +94,6 @@ function draw_content($menu_option)
                 die("Invalid menu option");
         }
     }
-}
-function draw_stock_screener()
-{
-    echo "<div style=\"border:1px dotted #bbbbbb; position:absolute; top:130px; height:410px; left:20%;  \">";
-echo " <select>
-  <option value=\"volvo\">SMA</option>
-  <option value=\"saab\">Volume</option>
-  <option value=\"mercedes\">Mercedes</option>
-  <option value=\"audi\">Audi</option>
-</select>";
-    echo "<p1 style=\"font-family: Titilum; color : #676D71; font-size: 0.9em; \">Stock screener</p1>";
-    echo "</div>";
-
 }
 
 ?>

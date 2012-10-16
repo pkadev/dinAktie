@@ -39,7 +39,8 @@ class TableBlue
         foreach($this->_list as $array)
         {
                 echo "
-                <tr>
+                <tr style: onclick=\"document.location = 'index.php?m=stock&disp=".
+                    $array[Kortnamn] .".ST';\">
                     <td>" . $array[Datum]  . "</td>
                     <td>" . $array[Namn]  . "</td>
                     <td>" . $array[Kortnamn]  . "</td>

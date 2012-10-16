@@ -2,6 +2,7 @@
     include_once('../largeCap.php');
     include_once('../midCap.php');
     include_once('../smallCap.php');
+    include_once('../firstNorth.php');
     include_once('tool_common.php');
 
     define("TABLE_NAME", "stock");
@@ -42,9 +43,10 @@
         $result = mysql_query($mysql_insert_query, $con);
         if($result)
             ;
-        else
+        else {
             print("Insert Failed for " . $isin. "<br>");
             print $query . "<br>";
+        }
         mysql_close($con);
     }
 
@@ -81,6 +83,10 @@
     foreach($smallCap as $stock)
     {
         insert_into_table($stock, getNameForSymbol($stock), $smallCapId);
+    }
+    foreach($firstNorth as $stock)
+    {
+        insert_into_table($stock, getNameForSymbol($stock), $firstNorthId);
     }
 
 print ("<table border=1 cellpadding=0 cellspacing=1><tr><td><b>Isin</td><td><b>Name</td><td><b>ListId</td></tr>");
