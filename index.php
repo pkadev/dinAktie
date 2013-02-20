@@ -56,8 +56,6 @@ $menuOption = ""; ?>
         }
         echo "<span position:absolute; style=\"height:1000px;\">";
         draw_content($_GET['m']);
-        draw_footer_line();
-        draw_footer();
         
         echo "<div id=\"scans\">";
 
