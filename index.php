@@ -41,7 +41,7 @@ $menuOption = ""; ?>
 
         <? draw_html_header(); ?>
         <?
-            $menu_entries = array("STOCK SCREENER", "LARM", "BLI MEDLEM", "OM OSS", "KONTAKT");
+            $menu_entries = array("STOCK SCREENER", "LARM", "BLI MEDLEM", "MÄKLARSTATISTIK", "KONTAKT");
             draw_top_menu($menu_entries);
         ?>
 
