@@ -77,7 +77,7 @@ class MySQLAdapter implements DataBaseAdapterInterface
                . (($limit) ? ' LIMIT ' . $limit : '')
             ;
         
-       print $query . "<br>";
+       //print $query . "<br>";
         $this->query($query);
         return $this->countRows();
     }
