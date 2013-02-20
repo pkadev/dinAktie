@@ -95,7 +95,7 @@ function do_diagram($stock_collection)
     $flush_to_file = "
     set terminal jpeg transparent enhanced font \"". $font .",".$font_size ."\" size " . $x_width . ", ".$y_width . "
 
-    set output '/var/www/dinAktie/" . $output_file_name ."'
+    set output '" . $output_file_name ."'
 set object 7 rect from graph 0.0,graph 1.0 to graph 1.0 fs solid 0.30 fc rgb \"#ffffff\" behind
     set key left top
     set multiplot
