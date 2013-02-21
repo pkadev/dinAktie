@@ -1,6 +1,7 @@
 <?
 include_once('screen_manager.php');
 include_once('filter.php');
+include_once('broker_share.php');
 
 function draw_contact_page()
 {
@@ -33,11 +34,12 @@ function draw_content($menu_option)
         {
             case "R": /* Stock screener */
             {
-                draw_stock_screener();
+                //draw_stock_screener();
                 break;
             }
             case "K": /* Sök */
             {
+                draw_broker_share();
                 break;
             }
             case "M": /* Bli medlem */
