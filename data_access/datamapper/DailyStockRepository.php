@@ -1,5 +1,5 @@
-
 <?
+include ('/var/www/dinAktie2/dinAktie/data_access/pwd.php');
 include ('DailyStockCollection.php');    
 include ('MySQLAdapter.php');
 include('largeCap.php');
@@ -13,7 +13,8 @@ class DailyStockRepository
 
     public function __construct()
     {
-        $param = array("localhost", "root", "bRUstu59", "dinAktie");
+        global $db_pwd;
+        $param = array("localhost", "root", $db_pwd, "dinAktie");
         $this->_mySQLAdapter = MySQLAdapter::getInstance($param);
         
         if(!$this->_mySQLAdapter)

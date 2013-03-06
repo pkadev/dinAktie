@@ -20,7 +20,7 @@ function get_y_tics_label($stock_price)
 function do_diagram($stock_collection)
 {
     if (count($stock_collection) == 0) {
-        echo "do_diagram empty collection";
+        //echo "do_diagram empty collection";
         return;
     }
     $stock_collection50 = array_slice($stock_collection, 0, 170);

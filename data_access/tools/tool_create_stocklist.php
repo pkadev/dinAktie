@@ -1,4 +1,5 @@
 <?
+    include ('../pwd.php');
 
 
     define("TABLE_NAME", "stocklist");
@@ -26,7 +27,8 @@
 
     function connect()
     {
-        $con = mysql_connect("localhost","root","bRUstu59");
+        global $db_pwd;
+        $con = mysql_connect("localhost","root", $db_pwd);
         if($con)
         {
             if(mysql_select_db(DB_NAME, $con))
@@ -46,7 +48,8 @@
 
     function dump_table()
     {
-        $con = mysql_connect("localhost","root","bRUstu59");
+        global $db_pwd;
+        $con = mysql_connect("localhost","root", $db_pwd);
         mysql_select_db("dinAktie", $con);
         $sql_drop_query = "DROP TABLE " . TABLE_NAME ;
         if (mysql_query($sql_drop_query, $con))

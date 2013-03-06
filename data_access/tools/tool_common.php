@@ -1,19 +1,46 @@
 <?
-
-function dump_table()
+include ('../pwd.php');
+function dump_table($table_name)
 {
-    $con = mysql_connect("localhost","root","bRUstu59");
+    global $db_pwd;
+
+    $con = mysql_connect("localhost","root", $db_pwd);
     mysql_select_db("dinAktie", $con);
-    $sql_drop_query = "DROP TABLE " . TABLE_NAME ;
+    $sql_drop_query = "DROP TABLE " . $table_name ;
     if (mysql_query($sql_drop_query, $con))
     {
-        echo "Table \"" . TABLE_NAME . "\" dropped<br />";
+        echo "Table \"" . $table_name . "\" dropped<br />";
     }
     else
     {
-        echo "Failed to drop table \"" . TABLE_NAME ."\"<br/>";
+        echo "Failed to drop table \"" . $table_name ."\"<br/>";
     }
     mysql_close($con);
+}
+function getBrokerShareForStock($symbol, $supplier)
+{
+    $format0 = "txt"; //space separated
+    $format1 = "csv"; //comma separated
+    $format2 = "sdv"; //semi colon separated
+    switch($supplier)
+    {
+        case "netfonds":
+            $query = "http://www.netfonds.se/quotes/tradedump.php?paper=" . $symbol .
+                      "&csv_format=" . $format1;
+            //echo $query;
+            
+            //time,price,quantity,board,source,buyer,seller,initiator
+            $csvBlob = getOneStock($query);
+            //echo $csvBlob;
+            $csvLines = explode("\n", $csvBlob);
+                
+            return $csvLines;
+
+        break;
+        default:
+            die("No supplier");
+        break;
+    }    
 }
 
 function getDailyDataForStock($isin, $supplier)
@@ -77,6 +104,7 @@ function getPeriodDataForStock($isin, $from, $to)
     $query = "http://ichart.finance.yahoo.com/table.csv?s=" . $isin .
              "&a=". $fromMonth . "&b=".$fromDay . "&c=" . $fromYear .
              "&d=". $toMonth . "&e=" . $toDay . "&f=" . $toYear . "&g=d&ignore=.csv";
+
     $csvBlob = getOneStock($query);
     //print $csvBlob . "<br>";
     $csvLines = explode("\n", $csvBlob);
@@ -137,7 +165,8 @@ function select_all_from_table($tableName)
 
 function connect()
 {
-    $con = mysql_connect("localhost","root","bRUstu59");
+    global $db_pwd;
+    $con = mysql_connect("localhost","root", $db_pwd);
     if($con)
     {
         if(mysql_select_db(DB_NAME, $con))

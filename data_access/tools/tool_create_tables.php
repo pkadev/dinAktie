@@ -1,4 +1,5 @@
 <?
+    include('../pwd.php');
     include('../largeCap.php');
     
     define("TABLE_NAME", "intra_day");
@@ -6,7 +7,8 @@
     
     function create_table()
     {
-        $con = mysql_connect("localhost","root","bRUstu59");
+        global $db_pwd;
+        $con = mysql_connect("localhost","root", $db_pwd);
     
         mysql_select_db(DB_NAME, $con);
 
@@ -52,7 +54,7 @@
     
     function dump_table()
     {
-        $con = mysql_connect("localhost","root","bRUstu59");
+        $con = mysql_connect("localhost","root", $db_pwd);
         mysql_select_db("dinAktie", $con);
         $sql_drop_query = "DROP TABLE " . TABLE_NAME ;
         if (mysql_query($sql_drop_query, $con))

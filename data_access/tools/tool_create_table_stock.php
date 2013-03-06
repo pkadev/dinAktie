@@ -70,7 +70,7 @@
 ?>
 
 <?
-    dump_table();
+    dump_table(TABLE_NAME);
     create_table();
     foreach($largeCap as $stock)
     {

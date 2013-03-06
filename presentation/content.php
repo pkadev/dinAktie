@@ -6,13 +6,19 @@ include_once('broker_share.php');
 function draw_contact_page()
 {
     echo "<div style=\"border:0px dotted black; position:absolute; top:130px; height:410px; left:20%;  \">";
-    echo "<form method=\"POST\" action=\"mailto:per.karlstedt@gmail.com\" method=\"post\" enctype=\"text/plain\">";
-    echo "<p>Namn:</br><input name=\"name\" value=\"John Doe\"><p>";
-    echo "Epost:</br><input name=\"email\" value=\"jdoe@someplace.edu\"><p>";
-    echo "Meddelande:</br><textarea name=\"content_message\" rows=10 cols=70 ";
-    echo "value=\"Here's some text.\"></textarea> <p>";
-    echo "<input type=\"submit\" value=\"Skicka\">";
-    echo "</form>";
+    echo "<p style=\"color:#E2491D; font-size:1.1em;\">Found a bug?</p>\n";
+    echo "<p style=\"color:#E2491D; font-size:1.1em;\">Suggest improvement?</p>\n";
+
+
+    echo "<p  style=\"color:#E2491D; font-size:1.1em;\">Send mail to <a style=\"color:#000000; font-size:0.9em;\" href=\"mailto:dinaktie@gmail.com\">dinaktie@gmail.com</a></p>";
+
+    //echo "<form method=\"POST\" action=\"mailto:per.karlstedt@gmail.com\" method=\"post\" enctype=\"text/plain\">";
+    //echo "<p>Namn:</br><input name=\"name\" value=\"John Doe\"><p>";
+    //echo "Epost:</br><input name=\"email\" value=\"jdoe@someplace.edu\"><p>";
+    //echo "Meddelande:</br><textarea name=\"content_message\" rows=10 cols=70 ";
+    //echo "value=\"Here's some text.\"></textarea> <p>";
+    //echo "<input type=\"submit\" value=\"Skicka\">";
+    //echo "</form>";
     echo "</div>";             
     //mail("per.karlstedt@innocode.se", "Mail from dinAktie", "You need to add more setups!");
 
@@ -27,7 +33,7 @@ function draw_content($menu_option)
         $sCollection = $dailyStockRepository->FindByIsin("MEDA-B.ST", 170);
         $col = $sCollection->GetCollection();
         do_diagram($col);
-        echo "<img src=\"plot.png\" class=\"post-body\" style=\"margin-top:10%\">";
+        //echo "<img src=\"plot.png\" class=\"post-body\" style=\"margin-top:10%\">";
         return;
     } else {
         switch($menu_option)
@@ -39,7 +45,8 @@ function draw_content($menu_option)
             }
             case "K": /* Sök */
             {
-                draw_broker_share();
+    
+                draw_broker_share($_GET['stock']);
                 break;
             }
             case "M": /* Bli medlem */
@@ -89,11 +96,12 @@ function draw_content($menu_option)
                 }
                 do_diagram($col, 0, 107);
                 
-        echo "<img src=\"plot.jpg\" class=\"post-body\" style=\"margin-top:130px\">";
+                //echo "<img src=\"plot.jpg\" class=\"post-body\" style=\"margin-top:130px\">";
                 break;
             }
             default:
-                die("Invalid menu option");
+                die("<p style=\"color:#E2491D; font-size:1.1em;\">Invalid menu option</p>");
+                die("");
         }
     }
 }

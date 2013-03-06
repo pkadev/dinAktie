@@ -11,8 +11,10 @@ include_once('tool_common.php');
 include_once('tool_synchronizer.php');
 include_once('../../presentation/error_reporter.php');
 
-define("TABLE_NAME", "daily");
 define("DB_NAME", "dinAktie"); 
+
+define("TABLE_NAME", "daily");
+define("TABLE_NAME_BROKER_SHARE", "broker_share");
 
 function create_table()
 {
@@ -39,6 +41,49 @@ function create_table()
     mysql_close($con);
 }
 
+function create_table_broker_share()
+{
+    $con = connect();
+
+    $sql_create_query = "CREATE TABLE " . TABLE_NAME_BROKER_SHARE . "
+                         (
+                            id INT NOT NULL AUTO_INCREMENT,
+                            symbol VARCHAR(12) NOT NULL,
+                            date DATE NOT NULL,
+                            buy_volume BIGINT NOT NULL,
+                            sell_volume BIGINT NOT NULL,
+                            broker VARCHAR(10),
+                            PRIMARY KEY (id)
+                         )";
+ 
+    if (mysql_query($sql_create_query, $con)) {
+        echo "Table \"" . TABLE_NAME_BROKER_SHARE . "\" created<br />";
+    }
+    else {
+        echo "Failed to create table \"" . TABLE_NAME_BROKER_SHARE . "\" <br/>";
+        echo mysql_error();
+    }
+
+    mysql_close($con);
+}
+
+function insert_into_broker_share($symbol, $date, $buy_volume, $sell_volume, $broker)
+{
+    $con = connect(); 
+    $mysql_insert_query = "INSERT INTO " . TABLE_NAME_BROKER_SHARE .
+                      " (symbol, date, buy_volume, sell_volume, broker)" .
+                      "VALUES ('" .
+                       $symbol . "','" .
+                       $date . "','" .
+                       $buy_volume . "','" .
+                       $sell_volume . "','" .
+                       $broker . "');";
+    $result = mysql_query($mysql_insert_query, $con);
+    //print $query;
+    if(!isset($result))
+        print("Insert Failed: " . mysql_error() . "<br>\n");
+    mysql_close($con);
+}
 
 function insert_into_table($isin, $date, $high, $low, $open, $close, $volume)
 {
@@ -137,6 +182,15 @@ function print_admin_fill_database_links()
          "?action=all\">all</a><br>";
     echo "<a class=\"searchHits\" href=\"".$_SELF['url'] .
          "?action=updateDay\">updateDay</a><br>";
+echo "<br>Statistik<br>";
+    echo "<a class=\"searchHits\" href=\"".$_SELF['url'] .
+         "?action=dumpTableBrokerShare\">Dump table - Broker Share</a><br>";
+    echo "<a class=\"searchHits\" href=\"".$_SELF['url'] .
+         "?action=createTableBrokerShare\">Create table - Broker Share</a><br>";
+    echo "<a class=\"searchHits\" href=\"".$_SELF['url'] .
+         "?action=broker_share\">Broker share</a><br>";
+    echo "<a class=\"searchHits\" href=\"".$_SELF['url'] .
+         "?action=broker_history\">Broker history</a><br>";
 }
 
 function updateDay($list, $date)
@@ -277,10 +331,108 @@ function fillDaily($list)
     echo $time . "<br>";
 }
 
-switch($_GET['action'])
+function create_mysql_date($netfonds_date_time)
 {
+
+define("LENGHT_OF_DATETIME_STR", "15"); 
+
+    if(strlen($netfonds_date_time) != LENGHT_OF_DATETIME_STR)
+        die("Wrong length in date_time");
+    $date_time = explode("T", $netfonds_date_time);
+
+    $date = substr($date_time[0], 0, 4) . "-" .
+            substr($date_time[0], 4, 2) . "-" .
+            substr($date_time[0], 6, 2) . " ";
+
+    //$date .= substr($date_time[1], 0, 2). ":" .
+    //         substr($date_time[1], 2, 2). ":" .
+    //         substr($date_time[1], 2, 2);
+    return $date;
+}
+
+function getAllBrokers($row)
+{
+    $brokers = array();
+    
+    for($j = 1; $j < count($row)-1; $j++)
+    {
+        $cols = explode(",", $row[$j]);
+
+        if(!in_array($cols[5], $brokers)) {
+            array_push($brokers, $cols[5]);
+        }
+        if(!in_array($cols[6], $brokers)) {
+            array_push($brokers, $cols[6]);
+        }
+    }
+    
+    return $brokers;
+}
+function redirect($loc){
+    echo "<script>window.location.href='".$loc."'</script>";
+}
+function getBrokerShare($list)
+{
+    $time_start = microtime(true);
+    $default = ini_get('max_execution_time');
+    set_time_limit(1000);
+    echo "getBrokerShare<br>";
+    foreach($list as $symbol)
+    {
+        echo $symbol;
+        echo "<br>";
+        
+        $dataCol = getBrokerShareForStock($symbol, "netfonds");
+        
+        $broker_list = getAllBrokers($dataCol);
+
+        //$symbolCollection[] = $symbol;
+        foreach($broker_list as $broker)
+        {
+            $buy_volume = 0;
+            $sell_volume = 0;
+            
+
+            for($j = 1; $j < count($dataCol)-1; $j++)
+            {
+                $cols = explode(",", $dataCol[$j]); 
+                $date = create_mysql_date($cols[0]);
+                
+                if($broker == $cols[5]) {
+                    $buy_volume += $cols[2]; 
+                }
+                if($broker == $cols[6]) {
+                // echo $cols[2] . "<br>";
+                    $sell_volume += $cols[2]; 
+                }
+                //echo $datetime . "<br>";
+                //print_r($cols); echo "<br>";
+                //                         $cols[4], $cols[5], $cols[6], $cols[7]);
+                
+            }
+            echo "Broker: " . $broker . ": " . $buy_volume . " - " . $sell_volume . "<br>";
+                insert_into_broker_share($symbol, $date, $buy_volume, $sell_volume, $broker);
+                
+        }
+//        redirect('tool_create_daily_stocks.php?cnt=' . $list[1]);
+    }
+    $table_data = select_all_from_table(TABLE_NAME_BROKER_SHARE); 
+    //print(count($table_data[0]));
+    foreach($table_data as $row) {
+        print_r ($row);
+        echo "<br>";
+    }
+
+    set_time_limit($default);
+    $time_end = microtime(true);
+    $time = $time_end - $time_start;
+    echo $time . "<br>";
+}
+
+switch($_GET['action'])
+{/*
     case "dumpTable":
-        dump_table();
+        dump_table(TABLE_NAME);
     break;
     case "createTable":
         create_table();
@@ -316,7 +468,26 @@ switch($_GET['action'])
         updateDay($smallCap, "2011-12-28");
         updateDay($firstNorth, "2011-12-28");
         echo "Updating missing days<br>";
+    break;*/
+    case "broker_share":
+        getBrokerShare($largeCap);
+        getBrokerShare($midCap);
+        getBrokerShare($smallCap);
+        getBrokerShare($firstNorth);
     break;
+/*
+    case "broker_history":
+        echo "Nothing to be done for broker_history<br>";
+    break;
+    case "createTableBrokerShare":
+        create_table_broker_share();
+    break;
+    case "dumpTableBrokerShare":
+        dump_table(TABLE_NAME_BROKER_SHARE);
+    break;
+*/    
+    default:
+        echo "<font color=red>Did not do anything<br></font>";
 }
 
 //$smallList = array("ERIC-A.ST", "ERIC-B.ST");
@@ -345,7 +516,7 @@ switch($_GET['action'])
 //$part1 = array_slice($largeCap, 70, 10);
 //init($part1);
 
-print_admin_fill_database_links();
+//print_admin_fill_database_links();
 echo "Done<br>";
 ?>
 </body>

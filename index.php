@@ -41,7 +41,7 @@ $menuOption = ""; ?>
 
         <? draw_html_header(); ?>
         <?
-            $menu_entries = array("STOCK SCREENER", "LARM", "BLI MEDLEM", "MÄKLARSTATISTIK", "KONTAKT");
+            $menu_entries = array("STOCK SCREENER", "ALARM", "MEMBER", "CONTACT");
             draw_top_menu($menu_entries);
         ?>
 
@@ -468,7 +468,7 @@ function presentResult($result)
     }
     else
     {
-        echo "Hittade inga aktier.";
+        echo "No stocks found.";
     }
 }
 
@@ -519,32 +519,33 @@ function draw_search_result($dailyStockRepository)
 {
             $searchInput = $_POST['formData'];
             
-            if (strlen($searchInput) < 3)
+                    echo "<div style=\"border:0px dotted #bbbbbb; position:absolute;".
+                         " top:140px; height:410px; right:20%; left:20%;  \">";
+            if (strlen($searchInput) < 2)
             {
-                echo "S&ouml;kstr&auml;ngen &auml;r f&ouml;r kort.";
+                echo "<p style=\"color:#E2491D; font-size:1.1em;\">Input to short.</p>";
             }
             else
             {
-                    echo "<div style=\"border:0px dotted #bbbbbb; position:absolute;".
-                         " top:140px; height:410px; right:20%; left:20%;  \">";
                     $searchHits = $dailyStockRepository->FindByText($searchInput);
                     
                     $searchHitCollection = $searchHits->GetCollection();
                     if (count($searchHitCollection) > 0) {
-                        if (count($searchHitCollection) == 1) {
-                            $_GET['disp'] = $searchHitCollection[0]->_isin;
-                            $_GET['m'] = "stock";
-                        } else {
+                        //if (count($searchHitCollection) == 1) {
+                        //    $_GET['disp'] = $searchHitCollection[0]->_isin;
+                        //    $_GET['m'] = "stock";
+                        //} else
+                        {
                             foreach($searchHitCollection as $hit) {
                                 $name =  ucwords(strtolower(str_replace("-", " ",
                                     stripFrom($hit->_name, "\""))));  
-                                echo "<a class=\"searchHits\" href=\"index.php?m=stock&disp=" .
+                                echo "<a class=\"searchHits\" href=\"index.php?m=K&stock=" .
                                      $hit->_isin . "\">" . $name . "</a><br>";
                             }
                         
                         }
                     } else {
-                        echo "<p style=\"color:#E2491D; font-size:1.1em;\">Hittade inga aktier.</p>";
+                        echo "<p style=\"color:#E2491D; font-size:1.1em;\">No stocks found.</p>";
                     }
                  echo "</div>";
                }

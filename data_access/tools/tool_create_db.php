@@ -1,8 +1,10 @@
 
 <?
+include ('../pwd.php');
 function create_empty_db()
 {
-    $con = mysql_connect("localhost","root","bRUstu59");
+    global $db_pwd;
+    $con = mysql_connect("localhost","root", $db_pwd);
     //if (!$con)
     //{
     //    die('Could not connect: ' . mysql_error());
@@ -20,5 +22,5 @@ function create_empty_db()
     mysql_close($con);
 }
 
-echo "Tool that creates an empty database";
+//echo "Tool that creates an empty database";
 ?>

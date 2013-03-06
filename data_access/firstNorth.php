@@ -4,6 +4,8 @@
     $firstNorth = array(
                         "AOI.ST",
                         "SNM.ST",
-                        "CRWN-MTF.NGM");
+                        "MAXP.ST",
+                        "CEFO-B.ST",
+                        "CRWN.NGM");
 ?>
 

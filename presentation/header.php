@@ -9,7 +9,7 @@ function draw_html_header()
 echo "    
 <html>
     <head>
-        <title>dinAktie.se - Tj&auml;na pengar p&aring; r&auml;tt aktier!</title>
+        <title>dinAktie - Aktier!</title>
         <link href=\"presentation/basic.css\" rel=\"stylesheet\" type=\"text/css\">
     </head>
     <body>";
@@ -19,7 +19,7 @@ echo "
            echo "<form action=\"index.php?m=search\" method=\"post\">
                     <input id=\"searchBox\" name=\"formData\" type=\"text\" autofocus=\"autofocus\"/>
                     <input id=\"searchButton\" type=\"submit\" name=\"formSearch\"" .
-                   " value=\"S&ouml;k aktie\" action=\"\" /> </form>";
+                   " value=\"Search Stock\" action=\"\" /> </form>";
 }
 function draw_top_menu($entries)
 {
