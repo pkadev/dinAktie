@@ -1,4 +1,6 @@
 <?
+error_reporting(E_ERROR);
+
 include ('data_access/datamapper/DailyStockRepository.php');
 include('data_access/largeCap.php');
 include('data_access/midCap.php');
