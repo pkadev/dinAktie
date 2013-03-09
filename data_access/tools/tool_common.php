@@ -25,7 +25,7 @@ function getBrokerShareForStock($symbol, $supplier)
     switch($supplier)
     {
         case "netfonds":
-            $query = "http://www.netfonds.se/quotes/tradedump.php?paper=" . $symbol .
+            $query = "http://www.netfonds.se/quotes/tradedump.php?date=20130218&paper=" . $symbol .
                       "&csv_format=" . $format1;
             //echo $query;
             

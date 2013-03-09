@@ -1,7 +1,6 @@
 
 <?
 
-set_include_path("/var/www/dinAktie/data_access");
 include_once ('../largeCap.php');
 include_once ('../midCap.php');
 include_once ('../smallCap.php');
@@ -376,11 +375,12 @@ function getBrokerShare($list)
     $time_start = microtime(true);
     $default = ini_get('max_execution_time');
     set_time_limit(1000);
-    echo "getBrokerShare<br>";
+    //echo "getBrokerShare<br>";
+
     foreach($list as $symbol)
     {
-        echo $symbol;
-        echo "<br>";
+        //echo $symbol;
+        //echo "<br>";
         
         $dataCol = getBrokerShareForStock($symbol, "netfonds");
         
@@ -416,12 +416,12 @@ function getBrokerShare($list)
         }
 //        redirect('tool_create_daily_stocks.php?cnt=' . $list[1]);
     }
-    $table_data = select_all_from_table(TABLE_NAME_BROKER_SHARE); 
-    //print(count($table_data[0]));
-    foreach($table_data as $row) {
-        print_r ($row);
-        echo "<br>";
-    }
+    //$table_data = select_all_from_table(TABLE_NAME_BROKER_SHARE); 
+    ////print(count($table_data[0]));
+    //foreach($table_data as $row) {
+    //    print_r ($row);
+    //    echo "<br>";
+    //}
 
     set_time_limit($default);
     $time_end = microtime(true);

@@ -7,6 +7,7 @@ function draw_search_form()
 function draw_html_header()
 {
 echo "    
+<!DOCTYPE html>
 <html>
     <head>
         <title>dinAktie - Aktier!</title>
@@ -17,7 +18,7 @@ echo "
 //           echo "<div id=\"banner-description\" class=\"banner-description\">";
            echo " <img style=\"float:left; margin-left:15px;\" src=\"logo.png\"/>";
            echo "<form action=\"index.php?m=search\" method=\"post\">
-                    <input id=\"searchBox\" name=\"formData\" type=\"text\" autofocus=\"autofocus\"/>
+                    <input id=\"searchBox\" name=\"formData\" type=\"text\"/>
                     <input id=\"searchButton\" type=\"submit\" name=\"formSearch\"" .
                    " value=\"Search Stock\" action=\"\" /> </form>";
 }

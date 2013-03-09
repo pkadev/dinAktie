@@ -2,10 +2,10 @@
 include ('/var/www/dinAktie2/dinAktie/data_access/pwd.php');
 include ('DailyStockCollection.php');    
 include ('MySQLAdapter.php');
-include('largeCap.php');
-include('midCap.php');
-include('smallCap.php');
-include('firstNorth.php');
+include('/var/www/dinAktie2/dinAktie/data_access/largeCap.php');
+include('/var/www/dinAktie2/dinAktie/data_access/midCap.php');
+include('/var/www/dinAktie2/dinAktie/data_access/smallCap.php');
+include('/var/www/dinAktie2/dinAktie/data_access/firstNorth.php');
 
 class DailyStockRepository
 {

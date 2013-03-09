@@ -1,7 +1,6 @@
 
 <?
-  set_include_path("/var/www/dinAktie/data_access");
-include('stock.php');
+include('/var/www/dinAktie2/dinAktie/data_access/stock.php');
 
 class DailyStockCollection
 {

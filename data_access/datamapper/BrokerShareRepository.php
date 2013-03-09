@@ -32,16 +32,48 @@ class BrokerShareRepository
         
         $d = "date between '" . $from ."' AND '" . $to . "' AND ";
 
+        $sort = ($_GET['sort'] == "DESC") ? "DESC" : "ASC";
+        
+        
+        switch($_GET['col'])
+        {
+            case "broker":
+                $col = "broker";
+            break;
+            case "buyer":
+                $col = "buy_sum";
+            break;
+            case "seller":
+                $col = "sell_sum";
+            break;
+            case "net":
+                $col = "net_sum";
+            break;
+            default:
+                $col = "broker";
+        }
         $this->_mySQLAdapter->select("broker_share", $d . "symbol='" . $isin .
-                                     "'", "*", "date DESC", $range);
+                                     "' GROUP by broker",
+                                     "*, SUM(sell_volume) as sell_sum, SUM(buy_volume) as buy_sum" .
+                                     ", (SUM(buy_volume) - SUM(sell_volume)) as net_sum  ",
+                                     $col . " " . $sort  ,$range);
 
         while($stocklistRow = $this->_mySQLAdapter->fetch())
         {
-            $bought[$stocklistRow['broker']] += $stocklistRow['buy_volume'];
-            $sold[$stocklistRow['broker']] += $stocklistRow['sell_volume'];
+            //echo $stocklistRow['broker'] . " - " . $stocklistRow['sel_sum'] . "<br>";
+            //echo $stocklistRow['broker'] . " - " . $stocklistRow['sum'] . "<br>";
+            //$bought[$stocklistRow['broker']] += $stocklistRow['buy_volume'];
+            //$sold[$stocklistRow['broker']] += $stocklistRow['sell_volume'];
+            $sum_sold[$stocklistRow['broker']] += $stocklistRow['sell_sum'];
+            $sum_bought[$stocklistRow['broker']] += $stocklistRow['buy_sum'];
+            $sum_net[$stocklistRow['broker']] += $stocklistRow['net_sum'];
         }
 
-        return array('bought' => $bought, 'sold' => $sold);
+        return array('sum_sold' => $sum_sold,
+                     'sum_bought' => $sum_bought,
+                     'sum_net' => $sum_net);
+
+    
     }
 
     public function FindOldestDate($isin, $range = '')

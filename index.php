@@ -1,6 +1,7 @@
 <?
 error_reporting(E_ERROR);
 
+session_start();
 include ('data_access/datamapper/DailyStockRepository.php');
 include('data_access/largeCap.php');
 include('data_access/midCap.php');
@@ -426,8 +427,11 @@ $menuOption = ""; ?>
         }
         else
         {
+            //echo "<p style=\"color:#E2491D; font-size:1.1em;\">Search for a stocks you are interested in.</p>";
             //echo "<img style=\"margin:70px 100px 400px 0px;\" src=\"newsFlash520x82.jpg\"/>";
         }
+        if($_GET['name'] != "")
+            echo "<p style=\"color:#E2491D; font-size:1.1em;\">Search for a stocks you are interested in.</p>";
         echo "</div>" ;
        //echo "<div id=\"popularScans\"></div>";
 
@@ -520,7 +524,7 @@ function drawMenu($menuOptionsBull, $menuOptionsBear)
 function draw_search_result($dailyStockRepository)
 {
             $searchInput = $_POST['formData'];
-            
+             
                     echo "<div style=\"border:0px dotted #bbbbbb; position:absolute;".
                          " top:140px; height:410px; right:20%; left:20%;  \">";
             if (strlen($searchInput) < 2)
@@ -529,6 +533,10 @@ function draw_search_result($dailyStockRepository)
             }
             else
             {
+                /* Save all search queries into database */
+                $sys_msg = new SystemMessage();
+                $sys_msg->save_search_query($searchInput);
+
                     $searchHits = $dailyStockRepository->FindByText($searchInput);
                     
                     $searchHitCollection = $searchHits->GetCollection();
@@ -548,6 +556,11 @@ function draw_search_result($dailyStockRepository)
                         }
                     } else {
                         echo "<p style=\"color:#E2491D; font-size:1.1em;\">No stocks found.</p>";
+                        echo "<p style=\"color:#E2491D; font-size:1.1em;\">Add your ticker here:</p>";
+                        echo "<form action=\"index.php?m=add\" method=\"post\">";
+                        echo "<input id=\"addBox\" name=\"formDataAdd\" type=\"text\"/> " .
+                             "<input id=\"addButton\" type=\"submit\" name=\"formSearch\"" .
+                                " value=\"Add Stock\" action=\"\" /> </form>";
                     }
                  echo "</div>";
                }

@@ -1,4 +1,5 @@
 <?
+include_once('data_access/pwd.php');
 /**
  * Generates a multi-column table from an array 
  *
@@ -39,6 +40,46 @@ function stripFrom($string, $strip)
         }
     }
     return $strippedStr;
+}
+
+class SystemMessage
+{
+    protected $_mySQLAdapter;
+
+    public function __construct()
+    {
+        global $db_pwd;
+        $param = array("localhost", "root", $db_pwd, "dinAktie");
+        $this->_mySQLAdapter = MySQLAdapter::getInstance($param);
+        
+        if(!$this->_mySQLAdapter)
+        {
+            echo("SQL adapter failed to create instance<br>");
+        }
+    }
+
+    function save_search_query($string)
+    {
+        /*
+         * HACK: Length of message is defined in 
+         * data_access/tools/tool_create_table_system_message.php
+         * and needs to coordinate with $message_max_len
+         */
+        $message_max_len = 30;
+        $string = "Search: " . $string;
+        if (strlen($string) > $message_max_len) {
+            $string = substr($string, 0, $message_max_len);
+        }
+            
+        $data = array(type => "MSG",
+                      message => $string,
+                      datetime => date("Y-m-d H:i:s")); 
+
+            //print_r($data);
+            $this->_mySQLAdapter->connect();
+            $this->_mySQLAdapter->insert("system_message", $data); 
+            $this->_mySQLAdapter->disconnect();
+    }
 }
 ?>
 

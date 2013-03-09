@@ -99,6 +99,16 @@ function draw_content($menu_option)
                 //echo "<img src=\"plot.jpg\" class=\"post-body\" style=\"margin-top:130px\">";
                 break;
             }
+            case "add":
+                echo "<div style=\"border:0px dotted black; position:absolute;
+                      top:130px; height:410px; left:20%; right:20% \">";
+                            echo "<p style=\"color:#E2491D; font-size:1.1em;\">" .
+                                 "Could not find any data for " .   
+                                 $searchInput = $_POST['formDataAdd'] .".</p>";
+                                 /* TODO: Make a serious effort to find a new stock */
+            
+                echo "</div>";
+            break;
             default:
                 die("<p style=\"color:#E2491D; font-size:1.1em;\">Invalid menu option</p>");
                 die("");
