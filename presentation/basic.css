@@ -379,6 +379,18 @@ h2 {
   font-size: 15px;
   margin: 0px 6px 0 0; 
 }
+
+#dateBox
+{
+  position:relative;
+  float:top;
+  height:12px;
+  width:90px;
+  padding-top:5px;
+  font : 10pt Titilum;
+/*  font-size: 15px; */
+/*  margin: 0px 6px 0 0; */
+}
 #searchButton
 {
   position:relative;
