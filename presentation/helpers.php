@@ -73,6 +73,7 @@ class SystemMessage
             
         $data = array(type => "MSG",
                       message => $string,
+                      ip_addr => $_SERVER['REMOTE_ADDR'],
                       datetime => date("Y-m-d H:i:s")); 
 
             //print_r($data);

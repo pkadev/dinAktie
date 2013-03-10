@@ -17,7 +17,7 @@ function dump_table($table_name)
     }
     mysql_close($con);
 }
-function getBrokerShareForStock($symbol, $supplier)
+function getBrokerShareForStock($symbol, $supplier, $date='')
 {
     $format0 = "txt"; //space separated
     $format1 = "csv"; //comma separated
@@ -25,7 +25,7 @@ function getBrokerShareForStock($symbol, $supplier)
     switch($supplier)
     {
         case "netfonds":
-            $query = "http://www.netfonds.se/quotes/tradedump.php?date=20130218&paper=" . $symbol .
+           $query = "http://www.netfonds.se/quotes/tradedump.php?paper=" . $symbol .
                       "&csv_format=" . $format1;
             //echo $query;
             

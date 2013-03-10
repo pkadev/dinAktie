@@ -370,19 +370,15 @@ function getAllBrokers($row)
 function redirect($loc){
     echo "<script>window.location.href='".$loc."'</script>";
 }
-function getBrokerShare($list)
+function getBrokerShare($list, $date='')
 {
     $time_start = microtime(true);
     $default = ini_get('max_execution_time');
     set_time_limit(1000);
-    //echo "getBrokerShare<br>";
 
     foreach($list as $symbol)
     {
-        //echo $symbol;
-        //echo "<br>";
-        
-        $dataCol = getBrokerShareForStock($symbol, "netfonds");
+        $dataCol = getBrokerShareForStock($symbol, "netfonds", $date);
         
         $broker_list = getAllBrokers($dataCol);
 
