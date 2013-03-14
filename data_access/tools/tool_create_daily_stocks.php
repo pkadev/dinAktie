@@ -1,20 +1,27 @@
 
 <?
 
-include_once ('../largeCap.php');
-include_once ('../midCap.php');
-include_once ('../smallCap.php');
-include_once ('../indexList.php');
-include_once ('../firstNorth.php');
-include_once('tool_common.php');
+include_once ('/var/www/dinAktie2/dinAktie/data_access/largeCap.php');
+include_once ('/var/www/dinAktie2/dinAktie/data_access/midCap.php');
+include_once ('/var/www/dinAktie2/dinAktie/data_access/smallCap.php');
+include_once ('/var/www/dinAktie2/dinAktie/data_access/indexList.php');
+include_once ('/var/www/dinAktie2/dinAktie/data_access/firstNorth.php');
+include_once('/var/www/dinAktie2/dinAktie/data_access/tools/tool_common.php');
 include_once('tool_synchronizer.php');
-include_once('../../presentation/error_reporter.php');
+include_once('/var/www/dinAktie2/dinAktie/presentation/error_reporter.php');
 
 define("DB_NAME", "dinAktie"); 
 
 define("TABLE_NAME", "daily");
 define("TABLE_NAME_BROKER_SHARE", "broker_share");
 
+//echo "<!DOCTYPE html><html>
+//    <head>
+//        <title>dinAktie.se</title>
+//        <link href=\"../../presentation/basic.css\" rel=\"stylesheet\" type=\"text/css\">
+//    </head>
+//    <body>
+//";
 function create_table()
 {
     $con = connect();
@@ -307,13 +314,6 @@ function read()
 //        print $line[isin] . "-" . $line[date] . "-" . $line[close] . "<br>";
 //    }    
            
-echo "<!DOCTYPE html><html>
-    <head>
-        <title>dinAktie.se</title>
-        <link href=\"../../presentation/basic.css\" rel=\"stylesheet\" type=\"text/css\">
-    </head>
-    <body>
-";
 
 function fillDaily($list)
 {
@@ -370,7 +370,7 @@ function getAllBrokers($row)
 function redirect($loc){
     echo "<script>window.location.href='".$loc."'</script>";
 }
-function getBrokerShare($list, $date='')
+function getBrokerShare($list, $url_date)
 {
     $time_start = microtime(true);
     $default = ini_get('max_execution_time');
@@ -378,7 +378,7 @@ function getBrokerShare($list, $date='')
 
     foreach($list as $symbol)
     {
-        $dataCol = getBrokerShareForStock($symbol, "netfonds", $date);
+        $dataCol = getBrokerShareForStock($symbol, "netfonds", $url_date);
         
         $broker_list = getAllBrokers($dataCol);
 
@@ -406,7 +406,7 @@ function getBrokerShare($list, $date='')
                 //                         $cols[4], $cols[5], $cols[6], $cols[7]);
                 
             }
-            echo "Broker: " . $broker . ": " . $buy_volume . " - " . $sell_volume . "<br>";
+            //echo "Broker: " . $broker . ": " . $buy_volume . " - " . $sell_volume . "<br>";
                 insert_into_broker_share($symbol, $date, $buy_volume, $sell_volume, $broker);
                 
         }
@@ -422,7 +422,7 @@ function getBrokerShare($list, $date='')
     set_time_limit($default);
     $time_end = microtime(true);
     $time = $time_end - $time_start;
-    echo $time . "<br>";
+    //echo $time . "<br>";
 }
 
 switch($_GET['action'])
@@ -466,10 +466,18 @@ switch($_GET['action'])
         echo "Updating missing days<br>";
     break;*/
     case "broker_share":
-        getBrokerShare($largeCap);
-        getBrokerShare($midCap);
-        getBrokerShare($smallCap);
-        getBrokerShare($firstNorth);
+        getBrokerShare($largeCap, $_GET['date']);
+        getBrokerShare($midCap, $_GET['date']);
+        getBrokerShare($smallCap, $_GET['date']);
+        getBrokerShare($firstNorth, $_GET['date']);
+        $result = select_from_table("stock", "listId", 4);
+        $custom_list = array(); 
+
+        foreach($result as $row) {
+            array_push($custom_list, $row['isin']);
+        }
+        getBrokerShare($custom_list, $_GET['date']);
+
     break;
 /*
     case "broker_history":
@@ -482,8 +490,8 @@ switch($_GET['action'])
         dump_table(TABLE_NAME_BROKER_SHARE);
     break;
 */    
-    default:
-        echo "<font color=red>Did not do anything<br></font>";
+//    default:
+        //echo "<font color=red>Did not do anything<br></font>";
 }
 
 //$smallList = array("ERIC-A.ST", "ERIC-B.ST");
@@ -513,7 +521,7 @@ switch($_GET['action'])
 //init($part1);
 
 //print_admin_fill_database_links();
-echo "Done<br>";
+//echo "Done<br>";
+//echo "</body>";
+//echo "</html>";
 ?>
-</body>
-</html>

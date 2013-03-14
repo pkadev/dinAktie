@@ -1,5 +1,21 @@
 <?
-include ('../pwd.php');
+include ('/var/www/dinAktie2/dinAktie/data_access/pwd.php');
+    function getNameForSymbol($string)
+    {
+        $query = "http://download.finance.yahoo.com/d/quotes.csv?s=" . $string . "&f=n";
+        // create a new cURL resource
+        $ch = curl_init($query);
+        
+        // set URL and other appropriate options
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true );
+       
+        // grab URL and pass it to the browser
+        $csv = curl_exec($ch);
+        // close cURL resource, and free up system resources
+        curl_close($ch);
+        return $csv;
+    }
+
 function dump_table($table_name)
 {
     global $db_pwd;
@@ -17,15 +33,17 @@ function dump_table($table_name)
     }
     mysql_close($con);
 }
-function getBrokerShareForStock($symbol, $supplier, $date='')
+function getBrokerShareForStock($symbol, $supplier, $url_date)
 {
+    //echo $symbol . " " . $url_date . "<br>";
     $format0 = "txt"; //space separated
     $format1 = "csv"; //comma separated
     $format2 = "sdv"; //semi colon separated
     switch($supplier)
     {
         case "netfonds":
-           $query = "http://www.netfonds.se/quotes/tradedump.php?paper=" . $symbol .
+           $query = "http://www.netfonds.se/quotes/tradedump.php?date=".$url_date."&paper=" . $symbol .
+//           $query = "http://www.netfonds.se/quotes/tradedump.php?paper=" . $symbol .
                       "&csv_format=" . $format1;
             //echo $query;
             
@@ -33,7 +51,7 @@ function getBrokerShareForStock($symbol, $supplier, $date='')
             $csvBlob = getOneStock($query);
             //echo $csvBlob;
             $csvLines = explode("\n", $csvBlob);
-                
+            //print_r($csvLines);           
             return $csvLines;
 
         break;
@@ -131,6 +149,38 @@ curl_setopt($ch, CURLOPT_TIMEOUT_MS, 5000);
     return $csv;
 }
 
+function select_from_table($tableName, $col_str, $match)
+{
+    $con = connect();
+    
+    if($con)
+    { 
+        $mysql_select_all_query = "SELECT * FROM " . $tableName .
+                                  " where " . $col_str. "='".$match ."';";
+
+        $result = mysql_query($mysql_select_all_query, $con);
+        
+        if ($result)
+        {
+            $data = array();
+            while($row = mysql_fetch_array($result))
+            {
+                array_push($data, $row);
+            }
+        }
+        else
+        {
+            echo "Failed!";
+        }
+        mysql_close($con);
+    }   
+    else
+    {
+        die('Could not connect: ' . mysql_error()); 
+    }
+    
+    return $data;
+}
 function select_all_from_table($tableName)
 {
     $con = connect();

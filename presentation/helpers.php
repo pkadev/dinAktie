@@ -58,6 +58,29 @@ class SystemMessage
         }
     }
 
+    function save_add_query($string)
+    {
+        /*
+         * HACK: Length of message is defined in 
+         * data_access/tools/tool_create_table_system_message.php
+         * and needs to coordinate with $message_max_len
+         */
+        $message_max_len = 30;
+        $string = "Add: " . $string;
+        if (strlen($string) > $message_max_len) {
+            $string = substr($string, 0, $message_max_len);
+        }
+            
+        $data = array(type => "MSG",
+                      message => $string,
+                      ip_addr => $_SERVER['REMOTE_ADDR'],
+                      datetime => date("Y-m-d H:i:s")); 
+
+            //print_r($data);
+            $this->_mySQLAdapter->connect();
+            $this->_mySQLAdapter->insert("system_message", $data); 
+            $this->_mySQLAdapter->disconnect();
+    }
     function save_search_query($string)
     {
         /*

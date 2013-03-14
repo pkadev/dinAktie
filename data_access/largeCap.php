@@ -47,6 +47,7 @@
                     "MTG-B.ST",
                     "NCC-A.ST",
                     "NCC-B.ST",
+                    "NOKI-SEK.ST",
                     "NDA-SEK.ST",
                     "ORI-SDB.ST",
                     "PEAB-B.ST",

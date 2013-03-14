@@ -1,0 +1,3 @@
+Start as many as you want to download
+#time wget http://192.168.1.5/data_access/tools/tool_create_daily_stocks.php?action=broker_share\&date=20130305 &
+i

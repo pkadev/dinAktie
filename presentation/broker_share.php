@@ -1,4 +1,5 @@
 <?
+include_once('data_access/brokers.php');
 include_once('/var/www/dinAktie2/dinAktie/data_access/brokers.php');
   set_include_path("/var/www/dinAktie2/dinAktie/data_access");
 include_once('datamapper/BrokerShareRepository.php');
@@ -79,20 +80,24 @@ function draw_broker_share($symbol)
         
     
     echo "<table border=0 cellspacing=0 cellpadding=0 width=100% style=\"border:1px;\">";
-    echo "<tr><td style=\"font-size:0.8em;\"><a class=\"searchHits\" href=\"?m=K&stock=".
-          $symbol."&col=broker&sort=" . $_SESSION['sort']. "\"><b>Broker</b></a></td>";
-    echo "<td style=\"text-align:right; font-size:0.8em;\"><a class=\"searchHits\" href=\"?m=K&stock=".
-          $symbol."&col=buyer&sort=" . $_SESSION['sort']. "\"><b>Buy volume</a></b></td>
-          <td style=\"text-align:right; font-size:0.8em;\"><a class=\"searchHits\" href=\"?m=K&stock=".
-          $symbol."&col=seller&sort=" . $_SESSION['sort']. "\"><b>Sell volume</b></td>
-          <td style=\"text-align:right; font-size:0.8em;\"><a class=\"searchHits\" href=\"?m=K&stock=".
-          $symbol."&col=net&sort=" . $_SESSION['sort']. "\"><b>Net volume</b></td></tr>";
+    echo "<tr><td colspan=2 style=\"font-size:0.8em;\"><a class=\"broker\" href=\"?m=K&stock=".
+          $symbol."&col=broker&sort=" . $_SESSION['sort']. "\">Broker</a></td>";
+    echo "<td style=\"text-align:right; font-size:0.8em;\"><a class=\"broker\" href=\"?m=K&stock=".
+          $symbol."&col=buyer&sort=" . $_SESSION['sort']. "\">Buy volume</a></td>
+          <td style=\"text-align:right; font-size:0.8em;\"><a class=\"broker\" href=\"?m=K&stock=".
+          $symbol."&col=seller&sort=" . $_SESSION['sort']. "\">Sell volume</td>
+          <td style=\"text-align:right; font-size:0.8em;\"><a class=\"broker\" href=\"?m=K&stock=".
+          $symbol."&col=net&sort=" . $_SESSION['sort']. "\">Net volume</td></tr>";
+
     foreach (array_keys($all_brokers) as $key => $broker)
     {
+        global $broker_hash;
         $color = $key % 2 ? "":"background-color:#DFDFDF;";
         echo "<tr style=\"". $color . "\">";
         echo "<td style=\"font-size:0.7em;\">" .
              $broker . "</td>";
+        echo "<td style=\"font-size:0.7em;\">" .
+             utf8_decode($broker_hash[$broker])  . "</td>";
         echo "<td style=\"text-align:right; font-size:0.7em;\">" .
              $broker_share['sum_bought'][$broker]  . "</td>";
         echo "<td style=\"text-align:right; font-size:0.7em;\">" .

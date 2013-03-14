@@ -24,6 +24,21 @@ class BrokerShareRepository
         }
     }
 
+    public function IsSymbolInDB($isin)
+    {
+        $this->_mySQLAdapter->connect();
+
+        $this->_mySQLAdapter->select("broker_share", "symbol='" . $isin .
+                                     "'", "*");
+        $stocklistRow = $this->_mySQLAdapter->fetch();
+        if ($stocklistRow['symbol'] == $isin) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
     public function FindByIsin($isin, $from, $to, $range = '')
     {
         $bought = array();

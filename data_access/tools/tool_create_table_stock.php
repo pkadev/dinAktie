@@ -8,6 +8,7 @@
     define("TABLE_NAME", "stock");
     define("DB_NAME", "dinAktie"); 
 
+    echo "Function getNameforStock move to tools_common.php";
     function create_table()
     {
         $con = connect();
@@ -51,43 +52,26 @@
     }
 
 
-    function getNameForSymbol($string)
-    {
-        $query = "http://download.finance.yahoo.com/d/quotes.csv?s=" . $string . "&f=n";
-        // create a new cURL resource
-        $ch = curl_init($query);
-        
-        // set URL and other appropriate options
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true );
-       
-        // grab URL and pass it to the browser
-        $csv = curl_exec($ch);
-        // close cURL resource, and free up system resources
-        curl_close($ch);
-        return $csv;
-    }
 
-?>
 
-<?
-    dump_table(TABLE_NAME);
-    create_table();
-    foreach($largeCap as $stock)
-    {
-        insert_into_table($stock, getNameForSymbol($stock), $largeCapId);
-    }
-    foreach($midCap as $stock)
-    {
-        insert_into_table($stock, getNameForSymbol($stock), $midCapId);
-    }
-    foreach($smallCap as $stock)
-    {
-        insert_into_table($stock, getNameForSymbol($stock), $smallCapId);
-    }
-    foreach($firstNorth as $stock)
-    {
-        insert_into_table($stock, getNameForSymbol($stock), $firstNorthId);
-    }
+//    dump_table(TABLE_NAME);
+//    create_table();
+//    foreach($largeCap as $stock)
+//    {
+//        insert_into_table($stock, getNameForSymbol($stock), $largeCapId);
+//    }
+//    foreach($midCap as $stock)
+//    {
+//        insert_into_table($stock, getNameForSymbol($stock), $midCapId);
+//    }
+//    foreach($smallCap as $stock)
+//    {
+//        insert_into_table($stock, getNameForSymbol($stock), $smallCapId);
+//    }
+//    foreach($firstNorth as $stock)
+//    {
+//        insert_into_table($stock, getNameForSymbol($stock), $firstNorthId);
+//    }
 
 print ("<table border=1 cellpadding=0 cellspacing=1><tr><td><b>Isin</td><td><b>Name</td><td><b>ListId</td></tr>");
     $data = select_all_from_table(TABLE_NAME);
@@ -102,6 +86,5 @@ print ("<table border=1 cellpadding=0 cellspacing=1><tr><td><b>Isin</td><td><b>N
     }
 
     print ("</tr></table>");
-
 ?>
 

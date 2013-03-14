@@ -1,6 +1,6 @@
 <?
-include ('../datamapper/DailyStockRepository.php');
-include('../largeCap.php');
+//include ('/var/www/dinAktie2/dinAktie/data_access/datamapper/DailyStockRepository.php');
+include('/var/www/dinAktie2/dinAktie/data_access/largeCap.php');
 
 class Synchronizer
 {

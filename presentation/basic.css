@@ -149,9 +149,19 @@ a.searchHits:hover {text-decoration:underline;}
 a.searchHits:active {text-decoration:underline;}
 a.searchHits:link { LINE-HEIGHT: 15px;}
 
-/* #E2491D Orange */
-/* #676D71 Gray */
-/* #9BDAE1 Cyan */
+a.broker:link {font-size:0.8em;color:#E2491D; font : 10pt Titilum, Arial,geneva,helvetica;}
+a.broker:visited {color:#E2491D;font : 10pt Titilum, Arial,geneva,helvetica;}
+a.broker:hover {color:#E2491D;}  /* mouse over link */
+a.broker:active {color:#555555;}  /* selected link */ 
+a.broker:hover {text-decoration:underline;}
+a.broker:active {text-decoration:underline;}
+a.broker:link { LINE-HEIGHT: 15px;}
+
+
+
+/* #E2491D Orange orange */
+/* #676D71 Gray gray */
+/* #9BDAE1 Cyan cyan */
 
 a.tablink:link {color:#E2491D;}      /* unvisited link */
 a.tablink:visited {color: #E2491D;}  /* visited link */ /* Orange */
@@ -300,6 +310,8 @@ h2 {
   margin-left: auto ;
   margin-right: auto ;
 }
+
+TD{font-family: Helvetica Verdana; font-size: 10pt;}
 
 #banner-menu
 { 
