@@ -35,7 +35,10 @@ function draw_top_menu($entries)
                 <a class=\"tablink\" href=\".?m=". $entry[strlen($entry)-1] ."\">" . $entry . "</a>
             </span>";
         }
-        echo "</div><div id=\"banner-menu\" class=\"banner-menu\"></div>";
+        echo "</div>";
+
+        /* Draw horizontal line */
+        echo "<div id=\"banner-menu\" class=\"banner-menu\"></div>";
 //
 //      echo "<!--  <div id=\"header\"> 
 //        <font face=\"Ubuntu\" size=30 color=#FF7010></font>

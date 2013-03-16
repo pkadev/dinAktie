@@ -285,9 +285,30 @@ h2 {
   line-height : 1;
 }
 
+
+
+
 @font-face {
-    font-family: Miso;
-    src: url('fonts/miso.otf');
+    font-family: 'Miso';
+    src: url('fonts/misoregular/miso-webfont.eot');
+    src: url('fonts/misoregular/miso-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/misoregular/miso-webfont.woff') format('woff'),
+         url('fonts/misoregular/miso-webfont.ttf') format('truetype'),
+         url('fonts/misoregular/miso-webfont.svg#misoregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+@font-face {
+    font-family: 'titilliumlight';
+    src: url('fonts/tit/titilliumtext22l002-webfont.eot');
+    src: url('fonts/tit/titilliumtext22l002-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/tit/titilliumtext22l002-webfont.woff') format('woff'),
+         url('fonts/tit/titilliumtext22l002-webfont.ttf') format('truetype'),
+         url('fonts/tit/titilliumtext22l002-webfont.svg#titilliumtext22llight') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
 }
 
 @font-face {
